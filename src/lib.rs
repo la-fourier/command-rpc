@@ -16,8 +16,12 @@ mod tests {
 
 use run_script::*;
 
-fn build(mk_gpt_docs: Option<bool>) {
+/// Used to be called in the `build.rs`
+fn build(mk_gpt_docs: Option<bool>) -> std::io::Result<()> {
     // Get file, then command iterator
+    for file in get_file_iterator("./") {
+
+    }
 
     // Check for docs
     match mk_gpt_docs {
@@ -29,14 +33,16 @@ fn build(mk_gpt_docs: Option<bool>) {
 
     // Generate parse structure of cli app
         // insert function value giving
+
+    Ok(())
 }
 
 
-fn mk_cli() {
+fn get_file_iterator(path: String) -> Vec<String> {
+    let home = std::env::current_dir();
+    std::env::cange_dir(path);
     let options = ScriptOptions::new();
-
     let args = vec![];
-
     // run the script and get the script execution output
     let (code, output, error) = run_script::run(
         r#"
@@ -47,22 +53,15 @@ fn mk_cli() {
     )
     .unwrap();
 
-    println!("Exit Code: {}", code);
-    println!("Output: {}", output);
-    println!("Error: {}", error);
+    println!("Scanning files: {}, {}", code, error);
 
-    // run the script and get a handle to the running child process
-    let child = run_script::spawn(
-        r#"
-         echo "Directory Info:"
-         dir
-         "#,
-        &args,
-        &options,
-    )
-    .unwrap();
+    for raw in output.split("\n") {
+        todo!()
+    }
 
-    let spawn_output = child.wait_with_output().unwrap();
+    std::env::cange_dir(home);
+}
 
-    println!("Success: {}", &spawn_output.status.success());
+fn crop_tree_result(s: String) -> String {
+    todo!()
 }
