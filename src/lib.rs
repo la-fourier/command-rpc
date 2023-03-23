@@ -16,6 +16,9 @@ mod tests {
 
 use run_script::*;
 
+extern crate build;
+use build::*;
+
 /// Used to be called in the `build.rs`
 fn build(mk_gpt_docs: Option<bool>) -> std::io::Result<()> {
     // Get file, then command iterator
