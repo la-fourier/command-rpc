@@ -1,46 +1,27 @@
-use std::fs::{self, File};
-use std::io::prelude::*;
-use std::path::{Path, PathBuf};
-
-/// Returns an iterator over all Rust source code files in a given directory and its subdirectories.
-///
-/// # Arguments
-///
-/// * `dir` - The directory to search for Rust source files.
-///
-/// # Examples
-///
-/// ```
-/// let files = rust_files_in_dir("path/to/directory").unwrap();
-/// ```
-pub fn rust_files_in_dir(dir: &str) -> Result<impl Iterator<Item = PathBuf>, std::io::Error> {
-    let path = Path::new(dir);
-
-    Ok(fs::read_dir(path)?
-        .filter_map(|res| res.ok())
-        .filter(|entry| {
-            if let Ok(file_type) = entry.file_type() {
-                file_type.is_file() && entry.path().extension().map_or(false, |ext| ext == "rs")
-            } else {
-                false
-            }
-        })
-        .map(|entry| entry.path()))
-}
-
+use std::fs::{self};
 use regex::Regex;
-use std::fs;
 use std::io::{BufRead, BufReader};
 
+/// Represents a CRPC function parsed from a Rust source file.
 #[derive(Debug)]
 pub struct CrpcFunction {
+    /// The source code of the function.
     pub source: String,
+    /// The path to the module containing the function.
     pub module_path: String,
+    /// The documentation for the function.
     pub documentation: String,
+    /// The function's parameters, as a string of comma-separated name:type pairs.
     pub parameters: String,
 }
 
 impl CrpcFunction {
+    /// Creates a new `CrpcFunction` instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `source` - The source code of the function.
+    /// * `module_path` - The path to the module containing the function.
     pub fn new(source: String, module_path: String) -> CrpcFunction {
         CrpcFunction {
             source,

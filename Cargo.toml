@@ -6,6 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-build = { path = "./build", version = "*" }
-run_script = "*"
-clap = "*"
+regex = "1.7.3"
