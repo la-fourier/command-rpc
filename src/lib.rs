@@ -19,6 +19,8 @@ pub use crpc_function::*;
 use std::fs::{self, File};
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
+
+extern crate regex;
 use regex::Regex;
 use std::io::{BufRead, BufReader};
 

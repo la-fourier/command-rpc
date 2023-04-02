@@ -1,3 +1,8 @@
+/*use std::{env, fmt::Debug};
+
 fn main() {
-    println!("{}", std::env::current_dir());
+    println!("{:?}", env::current_dir().fmt());
+}*/
+fn main() {
+    println!("Works");
 }
