@@ -3,11 +3,8 @@ A rpc for command line written in Rust for Python and Rust
 
 ## This works as following:
 
-    - mark up your core command with `#[crpc(core)]`
-    - all others with `#[crpc(sub)]`
-    - give them a structure by modulizing
-    - a built-in with subcommands is named `core()` in its module
-    - The main module has to be named `crpc`
+    - mark one module in `lib.rs` with `#[crpc]`
+    - you can insert all the stuff you need in that and mark all functions, mods and implementations
     - documentate arguments or tell if chat-gpt should do that
     - include the build-command in your `build.rs`
 
