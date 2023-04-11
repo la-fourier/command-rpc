@@ -14,6 +14,9 @@ mod tests {
 }
 */
 
+pub mod new;
+pub use new::builder;
+
 mod crpc_function;
 pub use crpc_function::*;
 use std::fs::{self, File};
