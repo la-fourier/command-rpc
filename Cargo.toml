@@ -12,3 +12,5 @@ crate-type = ["cdylib"]
 [dependencies]
 regex = "1.7.3"
 clap = "*"
+quote = "*"
+syn = "*"
