@@ -13,4 +13,4 @@ crate-type = ["cdylib"]
 regex = "1.7.3"
 clap = "*"
 quote = "*"
-syn = "*"
+syn = "2.0.15"
