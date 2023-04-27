@@ -5,12 +5,20 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+# my_workspace/Cargo.toml
+
 [lib]
 name = "command_rpc"
 crate-type = ["cdylib"]
 
+# [workspace]
+# members = [
+    # "crpc",
+    # "crpc-mark-macro",
+    # "traverse",
+# ]
+
 [dependencies]
-regex = "1.7.3"
-clap = "*"
-quote = "*"
-syn = "2.0.15"
+crpc = { version = "*", path = "./crpc" }
+crpc-mark-macro = { version = "*", path = "./crpc-mark-macro"}
+traverse = { version = "*", path = "./traverse"}
