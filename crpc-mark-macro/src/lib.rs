@@ -1,17 +1,16 @@
-extern crate proc_macro;
-extern crate syn;
+//extern crate proc_macro;
 // extern crate quote;
 // extern crate syn;
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::Item;
+//use syn::Item;
 use syn::parse_macro_input;
 
 
 #[proc_macro_attribute]
 pub fn crpc(_attr: TokenStream, item: TokenStream) -> TokenStream {
     // Parse the input tokens into a Rust syntax tree
-    let item = parse_macro_input!(item as Item);
+    let item = parse_macro_input!(item as syn::Item);
 
     // Modify the syntax tree as needed
     // For example, you can add additional code or metadata to the item
