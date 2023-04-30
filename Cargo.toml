@@ -10,7 +10,7 @@ license = "MIT OR Apache-2.0"
 # my_workspace/Cargo.toml
 
 [lib]
-name = "command_rpc"
+# name = "command_rpc"
 crate-type = ["cdylib"]
 
 [workspace]
