@@ -11,14 +11,14 @@ edition = "2021"
 name = "command_rpc"
 crate-type = ["cdylib"]
 
-# [workspace]
-# members = [
-    # "crpc",
-    # "crpc-mark-macro",
-    # "traverse",
-# ]
+[workspace]
+members = [
+    "crpc",
+    "crpc-mark-macro",
+    "traverse",
+]
 
-[dependencies]
-crpc = { version = "*", path = "./crpc" }
-crpc-mark-macro = { version = "*", path = "./crpc-mark-macro"}
-traverse = { version = "*", path = "./traverse"}
+# [dependencies]
+# crpc = { version = "*", git = "https://github.com/la-fourier/command-rpc/crpc.git" }
+# crpc-mark-macro = { version = "*", path = ".https://github.com/la-fourier/command-rpc/crpc_mark_macro.git"}
+# traverse = { version = "*", path = "https://github.com/la-fourier/command-rpc/traverse.git"}
