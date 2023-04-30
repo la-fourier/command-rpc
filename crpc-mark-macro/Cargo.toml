@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 name = "crpc_mark_macro"
-crate-type = ["proc-macro"]
+proc-macro = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
