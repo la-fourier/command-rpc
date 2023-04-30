@@ -11,4 +11,4 @@ crate-type = ["proc-macro"]
 
 [dependencies]
 syn = { version = "2.0.15", features = ["full"] }
-quote = "*"
+quote = "1.0.23"
