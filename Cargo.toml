@@ -10,8 +10,9 @@ license = "MIT OR Apache-2.0"
 # my_workspace/Cargo.toml
 
 [lib]
-# name = "command_rpc"
+name = "command_rpc"
 crate-type = ["dylib"]
+path = "src/lib.rs"
 
 [workspace]
 members = [
