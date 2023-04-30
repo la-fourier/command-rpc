@@ -13,12 +13,12 @@ license = "MIT OR Apache-2.0"
 name = "command_rpc"
 crate-type = ["cdylib"]
 
-# [workspace]
-# members = [
-#    "crpc",
-#    "crpc-mark-macro",
-#    "traverse",
-#]
+[workspace]
+members = [
+    "crpc",
+    "crpc-mark-macro",
+    "traverse",
+]
 
 # [dependencies]
 # crpc = { version = "*", git = "https://github.com/la-fourier/command-rpc/crpc.git" }
