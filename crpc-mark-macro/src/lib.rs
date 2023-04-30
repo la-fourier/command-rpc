@@ -2,7 +2,7 @@
 // extern crate quote;
 // extern crate syn;
 use proc_macro::TokenStream;
-// use quote::quote;
+use quote::quote;
 //use syn::Item;
 use syn::parse_macro_input;
 
@@ -17,13 +17,12 @@ pub fn crpc(_attr: TokenStream, item: TokenStream) -> TokenStream {
     // In this simple example, we are just generating a debug print statement
 
     // Generate the output tokens
-    // let output = quote! {
+    let output = quote! {
         // Add a debug print statement
-        // #item
-        // println!("This is a CRPC function");
-    // };
+        #item
+        println!("This is a CRPC function");
+    };
 
     // Return the output tokens as a TokenStream
-    // output.into()
-    TokenStream::default()
+    output.into()
 }
