@@ -1,6 +1,6 @@
 [package]
 name = "command-rpc"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "This is a rpc service which is not ready yet but needs to be published because of testing purposes."
 license = "MIT OR Apache-2.0"
@@ -13,12 +13,12 @@ license = "MIT OR Apache-2.0"
 name = "command_rpc"
 crate-type = ["cdylib"]
 
-[workspace]
-members = [
-    "crpc",
-    "crpc-mark-macro",
-    "traverse",
-]
+# [workspace]
+# members = [
+#    "crpc",
+#    "crpc-mark-macro",
+#    "traverse",
+#]
 
 # [dependencies]
 # crpc = { version = "*", git = "https://github.com/la-fourier/command-rpc/crpc.git" }
