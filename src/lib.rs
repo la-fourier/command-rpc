@@ -31,12 +31,19 @@ pub fn crpc(_attr: TokenStream, item: TokenStream) -> TokenStream {
     // For example, you can add additional code or metadata to the item
     // In this simple example, we are just generating a debug print statement
 
+    eprintln!("Expansion sucessfull!");
+    eprintln!("Expansion sucessfull!");
+    eprintln!("Expansion sucessfull!");
+    eprintln!("Expansion sucessfull!");
+    eprintln!("Expansion sucessfull!");
+    eprintln!("Expansion sucessfull!");
     // Generate the output tokens
     let output = quote! {
         // Add a debug print statement
         fn pre() {
             let x = 10;
         }
+        #item
     };
 
     // Return the output tokens as a TokenStream
