@@ -21,6 +21,7 @@ use quote::quote;
 use syn::parse_macro_input;
 
 
+/// This is where the magic happens.
 #[proc_macro_attribute]
 pub fn crpc(_attr: TokenStream, item: TokenStream) -> TokenStream {
     // Parse the input tokens into a Rust syntax tree
