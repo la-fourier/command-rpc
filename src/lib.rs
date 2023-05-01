@@ -34,8 +34,7 @@ pub fn crpc(_attr: TokenStream, item: TokenStream) -> TokenStream {
     // Generate the output tokens
     let output = quote! {
         // Add a debug print statement
-        #item
-        eprintln!("This is a CRPC function");
+        todo!()
     };
 
     // Return the output tokens as a TokenStream
