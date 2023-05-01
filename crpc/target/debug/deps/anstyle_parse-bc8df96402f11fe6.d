@@ -1,0 +1,11 @@
+/workspaces/command-rpc/crpc/target/debug/deps/anstyle_parse-bc8df96402f11fe6.rmeta: /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/lib.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/params.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/mod.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/definitions.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/table.rs
+
+/workspaces/command-rpc/crpc/target/debug/deps/libanstyle_parse-bc8df96402f11fe6.rlib: /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/lib.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/params.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/mod.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/definitions.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/table.rs
+
+/workspaces/command-rpc/crpc/target/debug/deps/anstyle_parse-bc8df96402f11fe6.d: /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/lib.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/params.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/mod.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/definitions.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/table.rs
+
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/lib.rs:
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/params.rs:
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/mod.rs:
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/definitions.rs:
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/anstyle-parse-0.2.0/src/state/table.rs:
