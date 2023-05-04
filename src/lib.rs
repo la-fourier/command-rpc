@@ -39,8 +39,8 @@ use std::io::Write;
 /// This is where the magic happens.
 #[proc_macro_attribute]
 pub fn crpc_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    eprintln!("_attr is: {:?}", _attr.to_string());
-    eprintln!("{:?}", item.to_string());
+    eprintln!("_attr is: {}", _attr.to_string());
+    eprintln!("{}", item.to_string());
 
     // Parse the input tokens into a Rust syntax tree
     let item = parse_macro_input!(item as syn::Item);
