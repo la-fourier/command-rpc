@@ -13,7 +13,7 @@ A command-line rpc written in Rust.
 - Contribution
 - Changelog
 
-
+---
 
 ## Installation, Status and Community
 
@@ -24,9 +24,9 @@ working solution will hopefully be published in three weeks.
 A bit later, a discord server could be set up if wanted.
 Furthermore, a tutorial is planned.
 
+---
 
-
-## What `crpc`is made for
+## What `crpc` is made for
 
 + lightweight
 + efficient
@@ -38,7 +38,7 @@ Furthermore, a tutorial is planned.
 Of course, that could be a disadvantage, you should not use `crpc` for big and well-standardized
 transfer protocolls.
 
-
+---
 
 ## How to use `crpc`
 
@@ -54,23 +54,33 @@ A tutorial will be coming and linked here then.
   with `#[crpc_param]`.
 4. Give the `main.rs` file acess to this module. Now 
 
-
+---
 
 ## What are you interested in? -New feature suggestion
 
-You like
+You like it and would even love it with some new feature? I´d be happy if you suggest it in the issues or contribute a pr directly.
 
-# old
-## This works as following:
+---
 
-    - mark one module in `lib.rs` with `#[crpc]`
-    - you can insert all the stuff you need in that and mark all functions, mods and implementations
-    - documentate arguments or tell if chat-gpt should do that
-    - include the build-command in your `build.rs`
+## Contribution
 
-## That will lead to:
+To do so, you may write for longer collaboration a message to me (Mail: loos-johannes@gmx.de, Discord: Lá Foûrier),
+or make directly a pr. I´d be glad!
 
-    - a cli that takes with unnamed, required and ordered params
-    - optional params with `--var val` syntax
-    - a lightweight, helpful documentation
-    - all that made with `clap`
+---
+
+## Changelog
+
+```
+v0.1: Little tests with `proc_macro = true` and import issues.
+
+v0.2: Full documented preview structure, no full implementation.
+
+Future preview:
+
+v0.3: About the begin of June ´23 there will be a beta version.
+
+v1.0: After one month of troubleshooting there will be a first full version release (and also Github Release).
+
+v1.1: Special proc macros - they shall manage communication that is frontend-backend-like.
+```
