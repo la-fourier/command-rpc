@@ -1,6 +1,6 @@
 [package]
 name = "command-rpc"
-version = "0.1.9"
+version = "0.1.10"
 edition = "2021"
 description = "This is a rpc service which is not ready yet but needs to be published because of testing purposes."
 license = "MIT OR Apache-2.0"
