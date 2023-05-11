@@ -170,12 +170,12 @@ pub fn callback(input: TokenStream) -> TokenStream {
     sc.to_token_stream().to_token_stream();
 
     quote!(
-        let handle = thread::spawn(|| {
+        let handle = std::thread::spawn(|| {
             // Run the shell command here
             let output = std::process::Command::new( #sc )
                 .output()
                 .expect("Failed to execute command");
-            println!("{}", String::from_utf8_lossy(&output.stdout));
+            println!("{}", std::string::String::from_utf8_lossy(&output.stdout));
         });
         handle.join().unwrap();
     ).into()
