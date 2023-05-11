@@ -11,7 +11,7 @@ A command-line rpc written in Rust.
 - How to use `crpc`
 - What are you interested in? -New feature suggestion
 - Contribution
-- Changelog
+- Version overview
 
 ---
 
@@ -52,7 +52,9 @@ A tutorial will be coming and linked here then.
   the module named after the module.
 4. Mark ALL Structs you need for parameters of the functions you want to give to the commands
   with `#[crpc_param]`.
-4. Give the `main.rs` file acess to this module. Now 
+4. Give the `main.rs` file acess to this module. Now you can expand, build or compile your program.
+
+As a extra tip, give at first parameter `--help` so you can see the help text of your cli endpoint.
 
 ---
 
@@ -69,7 +71,7 @@ or make directly a pr. I´d be glad!
 
 ---
 
-## Changelog
+## Version overview
 
 ```
 v0.1: Little tests with `proc_macro = true` and import issues.
