@@ -62,6 +62,10 @@ As a extra tip, give at first parameter `--help` so you can see the help text of
 
 You like it and would even love it with some new feature? I´d be happy if you suggest it in the issues or contribute a pr directly.
 
+#### Question: In the endpoind you´d use whitespaces between the arguments, are you interested in an option to change that?
+
+#### Question: Are you interested in being able to export macros?
+
 ---
 
 ## Contribution
