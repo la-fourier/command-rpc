@@ -17,7 +17,7 @@ A command-line rpc written in Rust.
 
 ## Installation, Status and Community
 
-Run `cargo add command-rpc` shell command or insert `command-rpc = "*"` in your Cargo.toml.
+Run `cargo add command-rpc --features standard` shell command or insert `command-rpc = { version = "*", features = ["standard"]` in your Cargo.toml.
 Just now, in `v0.1.9` this tools stands at the beginning of its development. The a first
 working solution will hopefully be published in three weeks.
 

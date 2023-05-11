@@ -15,19 +15,11 @@ name = "command_rpc"
 proc_macro = true
 path = "src/lib.rs"
 
-[feature]
+[features]
+standard = ["clap"]
 callback = []
 
-# [workspace]
-# members = [
-#     "crpc",
-#     "crpc-mark-macro",
-#     "traverse",
-# ]
-
 [dependencies]
+clap = { version = "*", optional = true } # TODO specify this to a several version
 syn = { version = "2.0.15", features = ["full"] }
 quote = "1.0.26"
-# crpc = { version = "*", git = "https://github.com/la-fourier/command_rpc/tree/main/crpc" }
-# crpc-mark-macro = { version = "*", git = "https://github.com/la-fourier/command_rpc/tree/main/crpc-mark-macro" }
-# traverse = { version = "*", git = "https://github.com/la-fourier/command_rpc/tree/main/traverse" }
