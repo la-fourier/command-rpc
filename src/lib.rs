@@ -158,18 +158,25 @@ pub fn crpc_param(_attr: TokenStream, item: TokenStream) -> TokenStream {
 }
 
 
+#[cfg(features = "callback")]
 #[proc_macro]
 pub fn callback(input: TokenStream) -> TokenStream {
-    let item = parse_macro_input!(input as syn::Item);
-    let mut item_c = item.into_token_stream().to_string();
+    let mut sc = parse_macro_input!(input as syn::Item)
+        .into_token_stream()
+        .to_string();
     for s in ["::", "(", ")"] {
-        item_c = item_c.replace(s, " ");
+        sc = sc.replace(s, " ");
     }
-    // Generate the output tokens
-    quote! {
-        // Add a debug print statement
-        fn pre() {
-            let x = 10;
-        }
-    }.into()
+    sc.to_token_stream().to_token_stream();
+
+    quote!(
+        let handle = thread::spawn(|| {
+            // Run the shell command here
+            let output = std::process::Command::new( #sc )
+                .output()
+                .expect("Failed to execute command");
+            println!("{}", String::from_utf8_lossy(&output.stdout));
+        });
+        handle.join().unwrap();
+    ).into()
 }

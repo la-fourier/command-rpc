@@ -15,6 +15,9 @@ name = "command_rpc"
 proc_macro = true
 path = "src/lib.rs"
 
+[feature]
+callback = []
+
 # [workspace]
 # members = [
 #     "crpc",
