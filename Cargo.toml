@@ -16,10 +16,10 @@ proc_macro = true
 path = "src/lib.rs"
 
 [features]
-standard = ["clap"]
+default = ["clap/derive"]
 callback = []
 
 [dependencies]
-clap = { version = "*", optional = true } # TODO specify this to a several version
+clap = { version = "*", features=["derive"], optional = true } # TODO specify this to a several version
 syn = { version = "2.0.15", features = ["full"] }
 quote = "1.0.26"

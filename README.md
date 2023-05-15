@@ -17,7 +17,7 @@ A command-line rpc written in Rust.
 
 ## Installation, Status and Community
 
-Run `cargo add command-rpc --features standard` shell command or insert `command-rpc = { version = "*", features = ["standard"]` in your Cargo.toml.
+Run `cargo add command-rpc --features default` shell command or insert `command-rpc = { version = "*", features = ["default"]` in your Cargo.toml.
 Just now, in `v0.1.9` this tools stands at the beginning of its development. The a first
 working solution will hopefully be published in three weeks.
 
@@ -35,8 +35,8 @@ Furthermore, a tutorial is planned.
 + export to any language
 + calls from expirienced user possible
 
-Of course, that could be a disadvantage, you should not use `crpc` for big and well-standardized
-transfer protocolls.
+Of course, that could be a disadvantage, you should not use `crpc` for big and well-defaultized
+transfer protocolls - and you may not use it for i/o stuff.
 
 ---
 
@@ -52,7 +52,8 @@ A tutorial will be coming and linked here then.
   the module named after the module.
 4. Mark ALL Structs you need for parameters of the functions you want to give to the commands
   with `#[crpc_param]`.
-4. Give the `main.rs` file acess to this module. Now you can expand, build or compile your program.
+5. Import the needed proc macros with `use command_rpc::*`.
+6. Give the `main.rs` file acess to this module. Now you can expand, build or compile your program.
 
 As a extra tip, give at first parameter `--help` so you can see the help text of your cli endpoint.
 
