@@ -18,6 +18,8 @@ use syn::{self, Item::*, parse_macro_input};
 use std::fs::File;
 use std::io::Write;
 
+use regex::Regex;
+
 
 #[cfg(feature = "default")]
 #[proc_macro_attribute]
@@ -67,7 +69,26 @@ pub fn crpc_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as syn::Item);
     let code = item.to_token_stream().to_string();
 
-    let name = code.split("fn").collect::<Vec<&str>>()[1].split("(").collect::<Vec<&str>>()[0].trim();
+    let pattern = r#"fn\s+(\w+)\s*\(\s*([^)]*)\s*\)"#;
+    let regex = Regex::new(pattern).unwrap();
+
+    if let Some(captures) = regex.captures(&code) {
+        // Extract function name
+        if let Some(function_name) = captures.get(1) {
+            println!("Function name: {}", function_name.as_str());
+        }
+
+        // Extract function parameters
+        if let Some(parameters) = captures.get(2) {
+            let parameter_list = parameters.as_str();
+            let parameter_names: Vec<_> = parameter_list
+                .split(',')
+                .map(|param| param.trim())
+                .collect();
+
+            println!("Function parameters: {:?}", parameter_names);
+        }
+    }
 
     // Modify the syntax tree as needed
     // For example, you can add additional code or metadata to the item

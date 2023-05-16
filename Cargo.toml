@@ -23,3 +23,4 @@ callback = []
 clap = { version = "*", features=["derive"], optional = true } # TODO specify this to a several version
 syn = { version = "2.0.15", features = ["full"] }
 quote = "1.0.26"
+regex = "1.5"
