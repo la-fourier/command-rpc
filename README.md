@@ -51,7 +51,7 @@ A tutorial will be coming and linked here then.
 3. To give the subcommands generated with `#[crpc_mod]` functionality, implement a (public) function in
   the module named after the module.
 4. Mark ALL Structs you need for parameters of the functions you want to give to the commands
-  with `#[crpc_param]`.
+  with `#[crpc_param]`. This is nightly for now, use primitive types as possible.
 5. Import the needed proc macros with `use command_rpc::*`.
 6. Give the `main.rs` file acess to this module. Now you can expand, build or compile your program.
 

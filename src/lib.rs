@@ -65,6 +65,9 @@ pub fn crpc_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     // Parse the input tokens into a Rust syntax tree
     let item = parse_macro_input!(item as syn::Item);
+    let code = item.to_token_stream().to_string();
+
+    let name = code.split("fn").collect::<Vec<&str>>()[1].split("(").collect::<Vec<&str>>()[0].trim();
 
     // Modify the syntax tree as needed
     // For example, you can add additional code or metadata to the item
@@ -119,9 +122,7 @@ pub fn crpc_param(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as syn::Item);
     quote! {
         // Add a debug print statement
-        fn pre() {
-            let x = 10;
-        }
+        #[derive(Debug, Display, From, Into)]
         #item
     }.into()
 }
