@@ -140,11 +140,36 @@ pub fn crpc_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn crpc_param(_attr: TokenStream, item: TokenStream) -> TokenStream {
     // Parse the input tokens into a Rust syntax tree
+    let item_str = item.to_string();
     let item = parse_macro_input!(item as syn::Item);
+
+    let pattern = r#"struct\s+(\w+)\s*\{\s*([^)]*)\s*\}"#;
+    let regex = Regex::new(pattern).unwrap();
+
+    let struct_name = {
+        if let Some(captures) = regex.captures(&item_str) {
+            // Extract struct name
+            if let Some(struct_name) = captures.get(1) {
+                struct_name
+            }
+            else {
+                panic!("No struct name found")
+            }
+        } else {
+           panic!("No struct found")
+        }
+    }.as_str();
+
     quote! {
         // Add a debug print statement
         #[derive(Debug, Display, From, Into)]
         #item
+
+        impl std::fmt::Display for #struct_name {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}", self.to_string())
+            }
+        }
     }.into()
 }
 
