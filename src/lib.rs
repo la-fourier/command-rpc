@@ -67,6 +67,20 @@ pub fn crpc_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     // Parse the input tokens into a Rust syntax tree
     let item = parse_macro_input!(item as syn::Item);
+
+    if let Fn(item) = &item {
+        if let syn::Visibility::Public(_) = item.vis {
+            println!("Public function");
+        }
+        else {
+            eprintln!("An item marked with #[crpc_fn] must be public.");
+        }
+        
+    }
+    else {
+        eprintln!("An item marked with #[crpc_fn] must be a function.");
+    }
+
     let code = item.to_token_stream().to_string();
 
     let pattern = r#"fn\s+(\w+)\s*\(\s*([^)]*)\s*\)"#;
