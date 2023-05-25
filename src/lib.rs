@@ -2,7 +2,20 @@
 /// 
 /// # Quick setup
 /// ```
-/// code
+/// pub mod my_cli_backend {
+///    pub fn greet(name: str // The name of the person you want to greet.
+///                 ) {
+///       println!("Hello, {}!", name);
+///   }
+/// 
+///  pub mod my_cli_backend_sub {
+///    pub fn friendly_greet(name: str // The name of the person you want to greet.
+///                          adjective: str // the adjective you want to use in the greeting.
+///                         ) -> Option<String> {
+///      println!("Hello, {}! You are {}!", name, adjective);
+///     Some("You are friendly!".to_string())
+///   }
+/// }
 /// ```
 /// 
 /// # Help! I want to customize stuff manually!
@@ -61,12 +74,46 @@ pub fn crpc(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// This is where the magic happens.
 #[cfg(feature = "default")]
 #[proc_macro_attribute]
-pub fn crpc_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
+pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
+               item: TokenStream //An other style!
+            ) -> TokenStream {
     println!("_attr is: {}", _attr.to_string());
     println!("{}", item.to_string());
 
     // Parse the input tokens into a Rust syntax tree
     let item = parse_macro_input!(item as syn::Item);
+
+    // Check for fn, public and output a type T ( where T: Into<String> )
+    // Parse name, args and their comments with "item.sig"
+    // Get command comments with "item.attrs" and "item.sig.ident"
+
+    // Return something like this:
+    // ```
+    // pub struct Mycommand {
+    //    arg1: T,
+    //   arg2: S,
+    // }
+    // 
+    // pub impl FromStr for Mycommand {
+    //   fn from_str(s: &str) -> Result<Self, Self::Err> {
+    //       todo!()
+    //   }
+    // }
+    // 
+    // pub impl Mycommand {
+    //  pub fn run(&self) -> Result<String> {
+    //    todo!()
+    //    // code of the item
+    //  }
+    // }
+
+
+    // TODO how to make a cmd and subcommands for cmd? mb with a "core" method for 
+    
+
+    // TODO idea for output Display deriving: https://stackoverflow.com/questions/30353462/how-to-derive-display-for-a-struct-containing-a-string
+    // WTF copilot?!
+    // making a new type equal to the type of the item - but since this is defined in this module, we are allowed to derive stuff from there - would make #[crpc_param] obsolete
 
     if let Fn(item) = &item {
         if let syn::Visibility::Public(_) = item.vis {
@@ -74,35 +121,13 @@ pub fn crpc_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
         }
         else {
             eprintln!("An item marked with #[crpc_fn] must be public.");
-        }
-        
+        } 
     }
     else {
         eprintln!("An item marked with #[crpc_fn] must be a function.");
     }
 
     let code = item.to_token_stream().to_string();
-
-    let pattern = r#"fn\s+(\w+)\s*\(\s*([^)]*)\s*\)"#;
-    let regex = Regex::new(pattern).unwrap();
-
-    if let Some(captures) = regex.captures(&code) {
-        // Extract function name
-        if let Some(function_name) = captures.get(1) {
-            println!("Function name: {}", function_name.as_str());
-        }
-
-        // Extract function parameters
-        if let Some(parameters) = captures.get(2) {
-            let parameter_list = parameters.as_str();
-            let parameter_names: Vec<_> = parameter_list
-                .split(',')
-                .map(|param| param.trim())
-                .collect();
-
-            println!("Function parameters: {:?}", parameter_names);
-        }
-    }
 
     // Modify the syntax tree as needed
     // For example, you can add additional code or metadata to the item
