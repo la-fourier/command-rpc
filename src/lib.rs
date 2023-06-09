@@ -27,7 +27,7 @@
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
 //use syn::Item;
-use syn::{self, Item::*, parse_macro_input};
+use syn::{self, Item::*, parse_macro_input, parse_quote};
 use std::fs::File;
 use std::io::Write;
 
@@ -77,9 +77,7 @@ pub fn crpc(attr: TokenStream, item: TokenStream) -> TokenStream {
 pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                item: TokenStream //An other style!
             ) -> TokenStream {
-    println!("_attr is: {}", _attr.to_string());
-    println!("{}", item.to_string());
-
+    use quote::__private::ext::RepToTokensExt;
     // Parse the input tokens into a Rust syntax tree
     let item = parse_macro_input!(item as syn::Item);
 
@@ -115,9 +113,40 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
     // WTF copilot?!
     // making a new type equal to the type of the item - but since this is defined in this module, we are allowed to derive stuff from there - would make #[crpc_param] obsolete
 
+
     if let Fn(item) = &item {
         if let syn::Visibility::Public(_) = item.vis {
-            println!("Public function");
+            item.sig.inputs.iter().for_each(|arg| {
+                println!("arg: {}", arg.to_token_stream().to_string());
+            });
+
+            if let syn::ReturnType::Type(_, boxed) = item.sig.output.clone() {
+                let type_name = boxed.to_token_stream();
+                
+                if let syn::Type::Path(path) = *boxed {
+                    if let Some(ident) = path.path.get_ident() {
+                        if ident.to_string() == "String" {
+                            println!("Your cli returns a String. This is ok but might cause speed issues.");
+                        }
+                    }
+                }
+                let return_type = 
+                else if let is_debug_impl = 
+                match &return_type {
+                    Type::Path(type_path) => {
+                        if let Some(segment) = type_path.path.segments.last() {
+                            segment.ident == parse_quote! { std::str::ToStr }.ident ||
+                            segment.ident == parse_quote! { std::str::ToString }.ident
+                        } else {
+                            false
+                        }
+                    }
+                    _ => false,
+            } {
+                println!("is_debug_impl");
+            }
+                println!("type_name: {}", type_name.to_string());
+            }
         }
         else {
             eprintln!("An item marked with #[crpc_fn] must be public.");
@@ -128,20 +157,6 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
     }
 
     let code = item.to_token_stream().to_string();
-
-    // Modify the syntax tree as needed
-    // For example, you can add additional code or metadata to the item
-    // In this simple example, we are just generating a debug print statement
-
-    if let Ok(mut file) = File::create("foo.txt") {
-        let res = file.write_all(b"Hello, world!");
-        if let Ok(re) = res {
-            println!("Ok");
-            println!("{}", std::env::current_dir().unwrap().to_str().unwrap());
-        } else {
-            println!("Not ok");
-        }
-    }
 
     // Generate the output tokens
     let output = quote! {
