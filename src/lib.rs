@@ -129,46 +129,37 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                             println!("Your cli returns a String. This is ok but might cause speed issues.");
                         }
                     }
-                }
-                let return_type = 
-                else if let is_debug_impl = 
-                match &return_type {
-                    Type::Path(type_path) => {
-                        if let Some(segment) = type_path.path.segments.last() {
-                            segment.ident == parse_quote! { std::str::ToStr }.ident ||
-                            segment.ident == parse_quote! { std::str::ToString }.ident
-                        } else {
-                            false
+                    if match &*boxed {
+                        syn::Type::Path(type_path) => {
+                            if let Some(segment) = type_path.path.segments.last() {
+                                segment.ident == parse_quote!{ std::str::ToStr }.ident ||
+                                segment.ident == parse_quote!{ std::str::ToString }.ident
+                            } else {
+                                false
+                            }
                         }
-                    }
-                    _ => false,
-            } {
-                println!("is_debug_impl");
+                        _ => false,
+                    } {
+
+                    };
+                }
             }
-                println!("type_name: {}", type_name.to_string());
-            }
-        }
-        else {
-            eprintln!("An item marked with #[crpc_fn] must be public.");
-        } 
-    }
-    else {
+        } else {
         eprintln!("An item marked with #[crpc_fn] must be a function.");
+        }
     }
 
     let code = item.to_token_stream().to_string();
 
     // Generate the output tokens
-    let output = quote! {
+    quote! {
         // Add a debug print statement
         fn pre() {
             let x = 10;
         }
         #item
-    };
-
-    // Return the output tokens as a TokenStream
-    output.into()
+        #code
+    }.to_token_stream().into()
 }
 
 
