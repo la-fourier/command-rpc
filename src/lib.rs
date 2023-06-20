@@ -78,6 +78,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                item: TokenStream //An other style!
             ) -> TokenStream {
     use quote::__private::ext::RepToTokensExt;
+    use syn::PathSegment;
     // Parse the input tokens into a Rust syntax tree
     let item = parse_macro_input!(item as syn::Item);
 
@@ -123,7 +124,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
             if let syn::ReturnType::Type(_, boxed) = item.sig.output.clone() {
                 let type_name = boxed.to_token_stream();
                 
-                if let syn::Type::Path(path) = *boxed {
+                if let syn::Type::Path(path) = *boxed.clone() {
                     if let Some(ident) = path.path.get_ident() {
                         if ident.to_string() == "String" {
                             println!("Your cli returns a String. This is ok but might cause speed issues.");
@@ -132,8 +133,9 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                     if match &*boxed {
                         syn::Type::Path(type_path) => {
                             if let Some(segment) = type_path.path.segments.last() {
-                                segment.ident == parse_quote!{ std::str::ToStr }.ident ||
-                                segment.ident == parse_quote!{ std::str::ToString }.ident
+                                //segment.ident == parse_quote!{ std::str::ToStr }.ident ||
+                                //segment.ident == parse_quote!{ std::str::ToString }.ident // TODO fix! Or it shall be something convertable to a str
+                                true
                             } else {
                                 false
                             }
@@ -144,22 +146,43 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                     };
                 }
             }
+            let mut name = item.sig.ident.to_string();
+            name = name.as_str().get(0).unwrap().to_uppercase().to_string() + name.as_str().get(1..).unwrap();
+
+            let code = item.to_token_stream().to_string();
+
+            // Generate the output tokens
+            return quote! {
+                pub struct Mycommand {
+                       arg1: T,
+                      arg2: S,
+                    }
+                    
+                    pub impl FromStr for Mycommand {
+                      fn from_str(s: &str) -> Result<Self, Self::Err> {
+                          Self {
+                                arg1: todo!(),
+                                arg2: todo!(),
+                          }
+                      }
+                    }
+                    
+                    pub impl Mycommand {
+                     pub fn run(&self) -> Result<String> {
+                       todo!()
+                       // code of the item
+                     }
+                    }
+                #item
+                #code
+            }.to_token_stream().into();
+
         } else {
         eprintln!("An item marked with #[crpc_fn] must be a function.");
         }
     }
 
-    let code = item.to_token_stream().to_string();
-
-    // Generate the output tokens
-    quote! {
-        // Add a debug print statement
-        fn pre() {
-            let x = 10;
-        }
-        #item
-        #code
-    }.to_token_stream().into()
+    item.to_token_stream().into()
 }
 
 
