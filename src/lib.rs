@@ -147,7 +147,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                 }
             }
             let mut name = item.sig.ident.to_string();
-            name = name.as_str().get(0).unwrap().to_uppercase().to_string() + name.as_str().get(1..).unwrap();
+            name = name.as_str().get(as_slice(0)).unwrap().to_uppercase().to_string() + name.as_str().get(1..).unwrap();
 
             let code = item.to_token_stream().to_string();
 
