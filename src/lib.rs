@@ -70,7 +70,6 @@ pub fn crpc(attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 }
 
-
 /// This is where the magic happens.
 #[cfg(feature = "default")]
 #[proc_macro_attribute]
@@ -85,42 +84,23 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
     // Check for fn, public and output a type T ( where T: Into<String> )
     // Parse name, args and their comments with "item.sig"
     // Get command comments with "item.attrs" and "item.sig.ident"
-
-    // Return something like this:
-    // ```
-    // pub struct Mycommand {
-    //    arg1: T,
-    //   arg2: S,
-    // }
-    // 
-    // pub impl FromStr for Mycommand {
-    //   fn from_str(s: &str) -> Result<Self, Self::Err> {
-    //       todo!()
-    //   }
-    // }
-    // 
-    // pub impl Mycommand {
-    //  pub fn run(&self) -> Result<String> {
-    //    todo!()
-    //    // code of the item
-    //  }
-    // }
-
-
-    // TODO how to make a cmd and subcommands for cmd? mb with a "core" method for 
-    
+    // TODO how to make a cmd and subcommands for cmd? mb with a "core" method for -> no, just a function, has no crashes bco diffrent types
 
     // TODO idea for output Display deriving: https://stackoverflow.com/questions/30353462/how-to-derive-display-for-a-struct-containing-a-string
     // WTF copilot?!
     // making a new type equal to the type of the item - but since this is defined in this module, we are allowed to derive stuff from there - would make #[crpc_param] obsolete
 
 
+    // Function check
     if let Fn(item) = &item {
+
+        // Public check
         if let syn::Visibility::Public(_) = item.vis {
             item.sig.inputs.iter().for_each(|arg| {
                 println!("arg: {}", arg.to_token_stream().to_string());
             });
 
+            // Output type check
             if let syn::ReturnType::Type(_, boxed) = item.sig.output.clone() {
                 let type_name = boxed.to_token_stream();
                 
@@ -133,9 +113,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                     if match &*boxed {
                         syn::Type::Path(type_path) => {
                             if let Some(segment) = type_path.path.segments.last() {
-                                //segment.ident == parse_quote!{ std::str::ToStr }.ident ||
-                                //segment.ident == parse_quote!{ std::str::ToString }.ident // TODO fix! Or it shall be something convertable to a str
-                                true
+                                segment.ident.to_string() == String::from("std::str::ToStr") // TODO fix! Or it shall be something convertable to a str
                             } else {
                                 false
                             }
@@ -146,19 +124,69 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                     };
                 }
             }
-            let mut name = item.sig.ident.to_string();
-            name = name.as_str().get(as_slice(0)).unwrap().to_uppercase().to_string() + name.as_str().get(1..).unwrap();
 
+            // Input type checks
+            for input in item.sig.inputs.clone() {
+                if let syn::FnArg::Typed(pat_type) = input {
+                    if let syn::Type::Path(path) = *pat_type.ty.clone() {
+                        if let Some(ident) = path.path.get_ident() {
+                            if ident.to_string() == "String" {
+                                println!("Your cli takes a String. This is ok but might cause speed issues.");
+                            }
+                        }
+                        if match &*pat_type.ty {
+                            syn::Type::Path(type_path) => {
+                                if let Some(segment) = type_path.path.segments.last() {
+                                    segment.ident.to_string() != String::from("std::str::FromStr")
+                                } else {
+                                    true
+                                }
+                            },
+                            syn::Type::Array(_) => false,
+                            syn::Type::Slice(type_slice) => {
+                                if let syn::Type::Path(type_path) = *type_slice.clone().elem {
+                                    if let Some(segment) = type_path.path.segments.last() {
+                                        segment.ident.to_string() != String::from("std::str::FromStr")
+                                    } else {
+                                        true
+                                    }
+                                } else {
+                                    true
+                                }
+                            },
+                            syn::Type::Tuple(_) => {
+                                println!("Your cli cannot take a tuple because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                                false
+                            },
+                            syn::Type::BareFn(_) => {
+                                println!("Your cli cannot take a function because you can´t give code to your cli at runtime.");
+                                false
+                            },
+                            syn::Type::Group()
+                            _ => true,
+                        } {
+                            // TODO feature: own default parser
+                            println!("Your cli takes a type that does not implement FromStr but the crpc macro needs it to parse the arguments. Please implement FromStr for your type.");
+                        };
+                    }
+                }
+            }
+
+            // Metastruct name
+            let mut name = item.sig.ident.to_string();
+            name = name.as_str().get(0..1).unwrap().to_uppercase().to_string() + name.as_str().get(1..).unwrap();
+
+            // Parse function
             let code = item.to_token_stream().to_string();
 
             // Generate the output tokens
             return quote! {
-                pub struct Mycommand {
-                       arg1: T,
-                      arg2: S,
+                pub struct #name {
+                        arg1: T,
+                        arg2: S,
                     }
                     
-                    pub impl FromStr for Mycommand {
+                    pub impl FromStr for #name {
                       fn from_str(s: &str) -> Result<Self, Self::Err> {
                           Self {
                                 arg1: todo!(),
@@ -167,7 +195,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                       }
                     }
                     
-                    pub impl Mycommand {
+                    pub impl #name {
                      pub fn run(&self) -> Result<String> {
                        todo!()
                        // code of the item
@@ -178,9 +206,11 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
             }.to_token_stream().into();
 
         } else {
+        eprintln!("An item marked with #[crpc_fn] must be public.");
+        }
+    } else {
         eprintln!("An item marked with #[crpc_fn] must be a function.");
         }
-    }
 
     item.to_token_stream().into()
 }
