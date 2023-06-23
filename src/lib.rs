@@ -162,7 +162,38 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                                 println!("Your cli cannot take a function because you can´t give code to your cli at runtime.");
                                 false
                             },
-                            syn::Type::Group()
+                            syn::Type::Group(_) => {
+                                println!("Your cli cannot take a group because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                                false
+                            },
+                            syn::Type::Paren(_) => {
+                                println!("Your cli cannot take a paren because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                                false
+                            },
+                            syn::Type::Reference(_) => {
+                                println!("Your cli cannot take a reference because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                                false
+                            },
+                            syn::Type::TraitObject(_) => {
+                                println!("Your cli cannot take a trait object because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                                false
+                            },
+                            syn::Type::ImplTrait(_) => {
+                                println!("Your cli cannot take a impl trait because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                                false
+                            },
+                            syn::Type::Infer(_) => {
+                                println!("Your cli cannot take a infer because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                                false
+                            },
+                            syn::Type::Macro(_) => {
+                                println!("Your cli cannot take a macro because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                                false
+                            },
+                            syn::Type::Never(_) => {
+                                println!("Your cli cannot take a never because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                                false
+                            },
                             _ => true,
                         } {
                             // TODO feature: own default parser
