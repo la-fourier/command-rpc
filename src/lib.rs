@@ -135,14 +135,13 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                             }
                         }
                         if match &*pat_type.ty {
-                            syn::Type::Path(type_path) => {
-                                if let Some(segment) = type_path.path.segments.last() {
+                            syn::Type::Path(types) => {
+                                if let Some(segment) = types.path.segments.last() {
                                     segment.ident.to_string() != String::from("std::str::FromStr")
                                 } else {
                                     true
                                 }
                             },
-                            syn::Type::Array(_) => false,
                             syn::Type::Slice(type_slice) => {
                                 if let syn::Type::Path(type_path) = *type_slice.clone().elem {
                                     if let Some(segment) = type_path.path.segments.last() {
@@ -194,7 +193,11 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                                 println!("Your cli cannot take a never because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
                                 false
                             },
-                            _ => true,
+                            syn::Type::Array(_) => false,
+                            _ => {
+                                println!("This is not finished yet, please be careful with your input types. ");
+                                false
+                            },
                         } {
                             // TODO feature: own default parser
                             println!("Your cli takes a type that does not implement FromStr but the crpc macro needs it to parse the arguments. Please implement FromStr for your type.");
@@ -204,8 +207,8 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
             }
 
             // Metastruct name
-            let mut name = item.sig.ident.to_string();
-            name = name.as_str().get(0..1).unwrap().to_uppercase().to_string() + name.as_str().get(1..).unwrap();
+            let pre_name = item.sig.ident.to_string();
+            let name = pre_name.as_str().get(0..1).unwrap().to_uppercase().to_string() + pre_name.as_str().get(1..).unwrap();
 
             // Parse function
             let code = item.to_token_stream().to_string();
@@ -213,16 +216,16 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
             // Generate the output tokens
             return quote! {
                 pub struct #name {
-                        arg1: T,
-                        arg2: S,
+                        #item.sig.inputs
                     }
                     
                     pub impl FromStr for #name {
                       fn from_str(s: &str) -> Result<Self, Self::Err> {
-                          Self {
+                        let arg = s.split(" --").collect().for_each();
+                          Ok(Self {
                                 arg1: todo!(),
                                 arg2: todo!(),
-                          }
+                          })
                       }
                     }
                     
