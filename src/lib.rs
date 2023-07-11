@@ -142,8 +142,8 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                                     true
                                 }
                             },
-                            syn::Type::Slice(type_slice) => {
-                                if let syn::Type::Path(type_path) = *type_slice.clone().elem {
+                            syn::Type::Slice(types) => {
+                                if let syn::Type::Path(type_path) = *types.clone().elem {
                                     if let Some(segment) = type_path.path.segments.last() {
                                         segment.ident.to_string() != String::from("std::str::FromStr")
                                     } else {
@@ -153,8 +153,18 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                                     true
                                 }
                             },
-                            syn::Type::Tuple(_) => {
-                                println!("Your cli cannot take a tuple because else this proc macro would have to check all types and it should be easy for you to find an other solution.");
+                            syn::Type::Tuple(types) => {
+                                types.elems.iter().for_each(|elem| {
+                                    if let syn::Type::Path(type_path) = *elem.clone() {
+                                        if let Some(segment) = type_path.path.segments.last() {
+                                            segment.ident.to_string() != String::from("std::str::FromStr")
+                                        } else {
+                                            true
+                                        }
+                                    } else {
+                                        true
+                                    }
+                                })
                                 false
                             },
                             syn::Type::BareFn(_) => {
