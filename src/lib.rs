@@ -33,6 +33,8 @@ use std::io::Write;
 
 use regex::Regex;
 
+use checks::*;
+
 
 #[cfg(feature = "default")]
 #[proc_macro_attribute]
@@ -101,29 +103,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
             });
 
             // Output type check
-            if let syn::ReturnType::Type(_, boxed) = item.sig.output.clone() {
-                let type_name = boxed.to_token_stream();
-                
-                if let syn::Type::Path(path) = *boxed.clone() {
-                    if let Some(ident) = path.path.get_ident() {
-                        if ident.to_string() == "String" {
-                            println!("Your cli returns a String. This is ok but might cause speed issues.");
-                        }
-                    }
-                    if match &*boxed {
-                        syn::Type::Path(type_path) => {
-                            if let Some(segment) = type_path.path.segments.last() {
-                                segment.ident.to_string() == String::from("std::str::ToStr") // TODO fix! Or it shall be something convertable to a str
-                            } else {
-                                false
-                            }
-                        }
-                        _ => false,
-                    } {
-
-                    };
-                }
-            }
+            
 
             // Input type checks
             for input in item.sig.inputs.clone() {
@@ -155,7 +135,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                             },
                             syn::Type::Tuple(types) => {
                                 types.elems.iter().for_each(|elem| {
-                                    if let syn::Type::Path(type_path) = *elem.clone() {
+                                    if let syn::Type::Path(type_path) = elem.clone() {
                                         if let Some(segment) = type_path.path.segments.last() {
                                             segment.ident.to_string() != String::from("std::str::FromStr")
                                         } else {
@@ -164,7 +144,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                                     } else {
                                         true
                                     }
-                                })
+                                });
                                 false
                             },
                             syn::Type::BareFn(_) => {
