@@ -11,7 +11,7 @@ pub mod type_checks {
         assert_eq!(n, 123);
     }
 
-    pub fn output_check() {
+    pub fn output_check(item: &syn::ItemFn) {
         if let syn::ReturnType::Type(_, boxed) = item.sig.output.clone() {
             let type_name = boxed.to_token_stream();
             
