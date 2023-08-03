@@ -126,7 +126,10 @@ pub mod type_checks {
                     // TODO feature: own default parser
                     println!("Your cli takes a type that does not implement FromStr but the crpc macro needs it to parse the arguments. Please implement FromStr for your type.");
                 };
+            } else {
+                println!("This is not finished yet, please be careful with your input types. ");
             }
+            true
         }
     }
 }
