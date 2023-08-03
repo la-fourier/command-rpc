@@ -18,14 +18,35 @@
 /// }
 /// ```
 ///
-/// # Help! I want to customize stuff manually!
+/// # Prettier requests to endpoint
+/// 
+/// To make call to your endpoint in your Rust programs nicer, you can insert this snippet
+/// that defines a declarative macro (this is why it can´t be just exported from this crate).
+/// Calls in your program would look like this then:
+/// ```	
+/// callback!(my_cli_backend::greet("John"));
 /// ```
-/// code
+/// 
 /// ```
-///
+/// macro_rules! callback {
+/// ($inp:expr) => {{
+///     let mut cmd = $inp.to_string();
+///     cmd = cmd.replace(";", "").replace(" ", "").replace("\n", "").replace("(", "").replace(")", "").replace("::", " ").replace(",", " ");
+///     std::thread::spawn(move || {
+///         let output = std::process::Command::new(cmd)
+///             .output()
+///             .expect("Failed to execute command");
+///         println!("{}", std::string::String::from_utf8_lossy(&output.stdout));
+///     });
+/// }};
+/// }
+/// ```
+/// 
+/// 
+
+
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
-//use syn::Item;
 use std::fs::File;
 use std::io::Write;
 use syn::{self, parse_macro_input, parse_quote, Item::*};
@@ -209,29 +230,5 @@ pub fn crpc_param(_attr: TokenStream, item: TokenStream) -> TokenStream {
             }
         }
     }
-    .into()
-}
-
-#[cfg(features = "callback")]
-#[proc_macro]
-pub fn callback(input: TokenStream) -> TokenStream {
-    let mut sc = parse_macro_input!(input as syn::Item)
-        .into_token_stream()
-        .to_string();
-    for s in ["::", "(", ")"] {
-        sc = sc.replace(s, " ");
-    }
-    sc.to_token_stream().to_token_stream();
-
-    quote!(
-        let handle = std::thread::spawn(|| {
-            // Run the shell command here
-            let output = std::process::Command::new( #sc )
-                .output()
-                .expect("Failed to execute command");
-            println!("{}", std::string::String::from_utf8_lossy(&output.stdout));
-        });
-        handle.join().unwrap();
-    )
     .into()
 }
