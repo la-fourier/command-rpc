@@ -1,5 +1,5 @@
 /// Hey! Nice you like to write with the `cprc` module. It refers to clap, thank you for your great work with that!
-/// 
+///
 /// # Quick setup
 /// ```
 /// pub mod my_cli_backend {
@@ -7,7 +7,7 @@
 ///                 ) {
 ///       println!("Hello, {}!", name);
 ///   }
-/// 
+///
 ///  pub mod my_cli_backend_sub {
 ///    pub fn friendly_greet(name: str // The name of the person you want to greet.
 ///                          adjective: str // the adjective you want to use in the greeting.
@@ -17,25 +17,22 @@
 ///   }
 /// }
 /// ```
-/// 
+///
 /// # Help! I want to customize stuff manually!
 /// ```
 /// code
 /// ```
-/// 
-
+///
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
 //use syn::Item;
-use syn::{self, Item::*, parse_macro_input, parse_quote};
 use std::fs::File;
 use std::io::Write;
+use syn::{self, parse_macro_input, parse_quote, Item::*};
 
 use regex::Regex;
 
 use checks::*;
-
-
 
 #[proc_macro_attribute]
 pub fn crpc(attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -44,39 +41,45 @@ pub fn crpc(attr: TokenStream, item: TokenStream) -> TokenStream {
     // Generate the output tokens
     let item = syn::parse_macro_input!(item as syn::Item);
     match item {
-        Fn(item) if attr.to_string() == "fn" => { // For fn
+        Fn(item) if attr.to_string() == "fn" => {
+            // For fn
             quote! {
                 #[crpc_fn]
                 #item
             }
             .into()
-        },
-        Mod(item) if attr.to_string() == "mod" => { // For mod
+        }
+        Mod(item) if attr.to_string() == "mod" => {
+            // For mod
             quote! {
                 #[crpc_mod]
                 #item
             }
             .into()
-        },
-        Struct(item) if attr.to_string() == "struct" => { // For param test
+        }
+        Struct(item) if attr.to_string() == "struct" => {
+            // For param test
             quote! {
                 #[crpc_param]
                 #item
             }
             .into()
-        },
+        }
         _ => {
-            eprint!("Error in {:?}: crpc can only be used on fn, mod and struct", ts_item.to_string());
+            eprint!(
+                "Error in {:?}: crpc can only be used on fn, mod and struct",
+                ts_item.to_string()
+            );
             ts_item
-        },
+        }
     }
 }
 
-
 #[proc_macro_attribute]
-pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
-               item: TokenStream //An other style!
-            ) -> TokenStream {
+pub fn crpc_fn(
+    _attr: TokenStream, //This is the bracket attr!
+    item: TokenStream,  //An other style!
+) -> TokenStream {
     use quote::__private::ext::RepToTokensExt;
     use syn::PathSegment;
     // Parse the input tokens into a Rust syntax tree
@@ -91,23 +94,31 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
     // WTF copilot?!
     // making a new type equal to the type of the item - but since this is defined in this module, we are allowed to derive stuff from there - would make #[crpc_param] obsolete
 
-
     // Function check
     if let Fn(item) = &item {
-
         // Public check
         if let syn::Visibility::Public(_) = item.vis {
             item.sig.inputs.iter().for_each(|arg| {
                 println!("arg: {}", arg.to_token_stream().to_string());
             });
 
-            // Output type check, call lib
+            // Output type check
+            checks::type_checks::output_check(&item.sig.output); //.clone().into_token_stream().to_string());
 
-            // Input type checks, call lib
+            // Input type checks
+            item.sig.inputs.iter().for_each(|arg| {
+                checks::type_checks::input_check(arg);
+            });
 
             // Metastruct name
             let pre_name = item.sig.ident.to_string();
-            let name = pre_name.as_str().get(0..1).unwrap().to_uppercase().to_string() + pre_name.as_str().get(1..).unwrap();
+            let name = pre_name
+                .as_str()
+                .get(0..1)
+                .unwrap()
+                .to_uppercase()
+                .to_string()
+                + pre_name.as_str().get(1..).unwrap();
 
             // Parse function
             let code = item.to_token_stream().to_string();
@@ -117,7 +128,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                 pub struct #name {
                         #item.sig.inputs
                     }
-                    
+
                     pub impl FromStr for #name {
                       fn from_str(s: &str) -> Result<Self, Self::Err> {
                         let arg = s.split(" --").collect().for_each();
@@ -127,7 +138,7 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                           })
                       }
                     }
-                    
+
                     pub impl #name {
                      pub fn run(&self) -> Result<String> {
                        todo!()
@@ -136,19 +147,18 @@ pub fn crpc_fn(_attr: TokenStream, //This is the bracket attr!
                     }
                 #item
                 #code
-            }.to_token_stream().into();
-
+            }
+            .to_token_stream()
+            .into();
         } else {
-        eprintln!("An item marked with #[crpc_fn] must be public.");
+            eprintln!("An item marked with #[crpc_fn] must be public.");
         }
     } else {
         eprintln!("An item marked with #[crpc_fn] must be a function.");
-        }
+    }
 
     item.to_token_stream().into()
 }
-
-
 
 #[proc_macro_attribute]
 pub fn crpc_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -161,10 +171,9 @@ pub fn crpc_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
             let x = 10;
         }
         #item
-    }.into()
+    }
+    .into()
 }
-
-
 
 #[proc_macro_attribute]
 pub fn crpc_param(_attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -180,14 +189,14 @@ pub fn crpc_param(_attr: TokenStream, item: TokenStream) -> TokenStream {
             // Extract struct name
             if let Some(struct_name) = captures.get(1) {
                 struct_name
-            }
-            else {
+            } else {
                 panic!("No struct name found")
             }
         } else {
-           panic!("No struct found")
+            panic!("No struct found")
         }
-    }.as_str();
+    }
+    .as_str();
 
     quote! {
         // Add a debug print statement
@@ -199,9 +208,9 @@ pub fn crpc_param(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 write!(f, "{}", self.to_string())
             }
         }
-    }.into()
+    }
+    .into()
 }
-
 
 #[cfg(features = "callback")]
 #[proc_macro]
@@ -223,5 +232,6 @@ pub fn callback(input: TokenStream) -> TokenStream {
             println!("{}", std::string::String::from_utf8_lossy(&output.stdout));
         });
         handle.join().unwrap();
-    ).into()
+    )
+    .into()
 }
