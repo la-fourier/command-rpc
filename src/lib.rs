@@ -128,6 +128,21 @@ pub fn crpc_fn(
 
             // Input type checks
             item.sig.inputs.iter().for_each(|arg| {
+                if let syn::FnArg::Typed(pat_type) = arg {
+                    if let syn::Type::Path(path) = *pat_type.ty.clone() {
+                        if let Some(ident) = path.path.get_ident() {
+                            if ident.to_string() == "String" {
+                                println!("Your cli takes a String. This is ok but might cause speed issues.");
+                            }
+                        }
+                        
+                    } else {
+                        println!("This is not finished yet, please be careful with your input types. ");
+                    }
+                    true
+                } else {
+                    true
+                }
                 checks::type_checks::input_check(arg);
             });
 
