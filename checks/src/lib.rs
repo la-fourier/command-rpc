@@ -19,8 +19,8 @@ pub mod type_checks {
                         println!("Your cli returns a String. This is ok but might cause speed issues.");
                     }
                 }
-            if match &*boxed {
-                syn::Type::Path(type_path) => {
+            if match &*boxed.clone() {
+                Box<syn::Type>::Path(type_path) => {
                     if let Some(segment) = type_path.path.segments.last() {
                         segment.ident.to_string() == String::from("std::str::ToStr") // TODO fix! Or it shall be something convertable to a str
                     } else {
@@ -59,10 +59,10 @@ pub mod type_checks {
                 let mut overall = true;
                 types.elems.iter().for_each(|elem| {
                     if ! input_check(&FnArg::Typed(PatType{
-                        attrs: types.attrs.clone(),
-                        pat: types.pat.clone(),
-                        colon_token: types.paren_token.clone(),
-                        ty: Box(elem.clone()),
+                        attrs: types.paren_token.attrs.clone(),
+                        pat: Box::from(),
+                        colon_token: syn::token::Colon::default(),
+                        ty: Box::from(elem.clone()),
                     })) {
                         overall = false;
                         println!("Your cli takes a tuple with a type that does not implement FromStr but the crpc macro needs it to parse the arguments. Please implement FromStr for your type.");
@@ -115,5 +115,23 @@ pub mod type_checks {
             // TODO feature: own default parser
             println!("Your cli takes a type that does not implement FromStr but the crpc macro needs it to parse the arguments. Please implement FromStr for your type.");
         };
+    }
+}
+
+pub mod build_clap{
+    pub fn build_clap() {
+        // TODO
+    }
+
+    pub fn metastruct() {
+        // TODO
+    }
+
+    pub fn convert_function() {
+        // TODO
+    }
+
+    pub fn impl_from_str() {
+        // TODO
     }
 }
