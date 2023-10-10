@@ -1,4 +1,5 @@
-/// Hey! Nice you like to write with the `cprc` module. It refers to clap, thank you for your great work with that!
+/// Hey! Nice you like to write with the `cprc` module. It refers to clap, thank you for your great work there!
+/// Unfortunately, you have to import clap in your project yourself with *derive* feature enabled.
 ///
 /// # Quick setup
 /// ```
@@ -22,7 +23,7 @@
 /// 
 /// To make call to your endpoint in your Rust programs nicer, you can insert this snippet
 /// that defines a declarative macro (this is why it can´t be just exported from this crate).
-/// Calls in your program would look like this then:
+/// Calls in your program would look like this then(Same for other languages will be coming):
 /// ```	
 /// callback!(my_cli_backend::greet("John"));
 /// ```
@@ -53,7 +54,7 @@ use syn::{self, parse_macro_input, parse_quote, Item::*};
 
 use regex::Regex;
 
-use checks::*;
+use mk_cli::*;
 
 #[proc_macro_attribute]
 pub fn crpc(attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -195,6 +196,8 @@ pub fn crpc_fn(
 
     item.to_token_stream().into()
 }
+
+
 
 #[proc_macro_attribute]
 pub fn crpc_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {

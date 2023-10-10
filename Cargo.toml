@@ -21,4 +21,4 @@ syn = { version = "2.0.15", features = ["full", "parsing", "printing"] }
 quote = "1.0.26"
 regex = "1.5"
 
-checks = { version = "^0.1.0", path = "./checks/" }
+mk_cli = { version = "^0.1.0", path = "./mk_cli/" }
