@@ -144,7 +144,7 @@ pub fn crpc_fn(
                 } else {
                     true
                 }
-                checks::type_checks::input_check(arg);
+                checks::input_check(arg);
             });
 
             // Metastruct name
