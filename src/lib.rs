@@ -48,9 +48,7 @@
 
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
-use std::fs::File;
-use std::io::Write;
-use syn::{self, parse_macro_input, parse_quote, Item::*};
+use syn::{self, parse_macro_input, Item::*};
 
 use regex::Regex;
 
@@ -102,8 +100,6 @@ pub fn crpc_fn(
     _attr: TokenStream, //This is the bracket attr!
     item: TokenStream,  //An other style!
 ) -> TokenStream {
-    use quote::__private::ext::RepToTokensExt;
-    use syn::PathSegment;
     // Parse the input tokens into a Rust syntax tree
     let item = parse_macro_input!(item as syn::Item);
 
@@ -120,45 +116,24 @@ pub fn crpc_fn(
     if let Fn(item) = &item {
         // Public check
         if let syn::Visibility::Public(_) = item.vis {
-            item.sig.inputs.iter().for_each(|arg| {
-                println!("arg: {}", arg.to_token_stream().to_string());
-            });
 
             // Output type check
-            checks::type_checks::output_check(&item.sig.output); //.clone().into_token_stream().to_string());
+            checks::output_check(&item.sig.output); //.clone().into_token_stream().to_string());
 
             // Input type checks
-            item.sig.inputs.iter().for_each(|arg| {
-                if let syn::FnArg::Typed(pat_type) = arg {
-                    if let syn::Type::Path(path) = *pat_type.ty.clone() {
-                        if let Some(ident) = path.path.get_ident() {
-                            if ident.to_string() == "String" {
-                                println!("Your cli takes a String. This is ok but might cause speed issues.");
-                            }
-                        }
-                        
-                    } else {
-                        println!("This is not finished yet, please be careful with your input types. ");
-                    }
-                    true
-                } else {
-                    true
-                }
-                checks::input_check(arg);
-            });
+            if item.sig.inputs.iter().any(|arg| {
+                checks::input_check(arg).is_err()
+            }) {
+                panic!("Your cli cannot take a function because you can´t give code to your cli at runtime.");
+            }
 
-            // Metastruct name
-            let pre_name = item.sig.ident.to_string();
-            let name = pre_name
-                .as_str()
-                .get(0..1)
-                .unwrap()
-                .to_uppercase()
-                .to_string()
-                + pre_name.as_str().get(1..).unwrap();
+
+            // Building...
+
+            let name = build::metastruct::metastruct_name(item.sig.ident.to_string());
 
             // Parse function
-            let code = item.to_token_stream().to_string();
+            let code = build::metastruct::run_function(item);
 
             // Generate the output tokens
             return quote! {
@@ -178,12 +153,9 @@ pub fn crpc_fn(
 
                     pub impl #name {
                      pub fn run(&self) -> Result<String> {
-                       todo!()
-                       // code of the item
+                       #code
                      }
                     }
-                #item
-                #code
             }
             .to_token_stream()
             .into();
@@ -214,6 +186,7 @@ pub fn crpc_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     .into()
 }
 
+#[deprecated]
 #[proc_macro_attribute]
 pub fn crpc_param(_attr: TokenStream, item: TokenStream) -> TokenStream {
     // Parse the input tokens into a Rust syntax tree

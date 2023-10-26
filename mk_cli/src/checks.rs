@@ -7,7 +7,7 @@ use syn::{self, parse_macro_input, parse_quote, FnArg, Item::*, PatType, ReturnT
 
 use regex::Regex;
 
-pub fn output_check(rt: &ReturnType) -> std::io::Result<()> {
+pub fn output_check(rt: &ReturnType) {
     if let syn::ReturnType::Type(_, boxed) = rt {
         if let syn::Type::Path(path) = *boxed.clone() {
             if let Some(ident) = path.path.get_ident() { // Some unpacking of the whole Structure (TODO merch maybe)
@@ -27,7 +27,6 @@ pub fn output_check(rt: &ReturnType) -> std::io::Result<()> {
             }
         }
     }
-    Ok(())
 }
 
 pub fn input_check(arg: &FnArg) -> std::io::Result<()> {
