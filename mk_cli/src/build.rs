@@ -22,6 +22,7 @@ pub mod metastruct {
 pub fn convert_function(item: ItemFn) -> String {
     let mut run_function = item.clone();
     run_function.sig.ident = syn::Ident::new("run", run_function.sig.ident.span());
+    return String::from("");
 }
 
 pub fn impl_from_str() -> std::io::Result<String> {

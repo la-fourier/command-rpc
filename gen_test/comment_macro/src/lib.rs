@@ -17,7 +17,8 @@ pub fn extract_comments(_: TokenStream, input: TokenStream) -> TokenStream {
                         .filter_map(|nested_meta| match nested_meta {
                             syn::NestedMeta::Meta(syn::Meta::NameValue(name_value)) => {
                                 if name_value.path.is_ident("value") {
-                                    Some(name_value.lit.clone())
+                                    let litt = name_value.lit;
+                                    Some(litt.clone())
                                 } else {
                                     None
                                 }
