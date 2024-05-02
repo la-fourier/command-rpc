@@ -34,7 +34,7 @@ Furthermore, a tutorial is planned.
 + automatised type-checks
 + being easy-to write and beginner friendly
 + export to any language
-+ calls from expirienced user possible
++ calls from user or other programs
 
 Of course, that could be a disadvantage, you should not use `crpc` for big and well-defaultized
 transfer protocolls - and you may not use it for i/o stuff.

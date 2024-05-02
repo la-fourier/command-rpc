@@ -27,7 +27,7 @@
 /// ```	
 /// callback!(my_cli_backend::greet("John"));
 /// ```
-/// 
+///  TODO!
 /// ```
 /// macro_rules! callback {
 /// ($inp:expr) => {{
@@ -43,6 +43,8 @@
 /// }
 /// ```
 /// 
+/// TODO: Main Function resolution
+/// 
 /// 
 
 
@@ -53,6 +55,8 @@ use syn::{self, parse_macro_input, Item::*};
 use regex::Regex;
 
 use mk_cli::*;
+
+// lazy variant! Just mark the main module with [crpc_main], then everything gets expaneded recursively!
 
 #[proc_macro_attribute]
 pub fn crpc(attr: TokenStream, item: TokenStream) -> TokenStream {

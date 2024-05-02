@@ -1,8 +1,12 @@
-fn main() {
-    println!("Hello, world!");
-}
 
-// the main function alias that walks through determination steps
-fn cli_walkthrough(command: str) -> str {
-    
+mod args;
+
+use args::RustflixArgs;
+use clap::Parser;
+
+fn main() {
+    for arg in std::env::args() {
+        println!("{arg}");
+    }
+    let args = RustflixArgs::parse();
 }
