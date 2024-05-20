@@ -7,6 +7,10 @@ Bei solchen Fragen bist du hier genau richtg! comm
 
 ---
 
+Showcase? 
+
+---
+
 Trailer (~3min) ENG
 Hey guys!
 Are you a rust-developer stuggling with `clap` and its code-intense way of using structs, enums and derive macros? Pretty annoying.
@@ -35,16 +39,18 @@ Hey everyone!
 
 Are you a Rust developer struggling with clap due to its code-intensive usage of structs, enums, and derive macros? This can be frustrating. The same goes for backend developers seeking a clean, scalable, and easy-to-use tool for remote procedure calls.
 
-I'm delighted to offer assistance to both groups. Why not extract the best features of clap and utilize them within a procedural macro? That's exactly what command_rpc does. You can still write comments next to your code, which will be utilized for a --help flag. Meanwhile, all the parsing work is handled by ready-to-export functions provided by command_rpc.
+I'm delighted to offer assistance to both groups. Why not extract the best features of clap and utilize them within a procedural macro? That's exactly what command_rpc does. You can still write comments next to your code, which will be utilized for a `--help` flag. Meanwhile, all the parsing work is handled by ready-to-export functions provided by command_rpc.
 
 Instead of manually constructing the CLI structure, it's automatically generated. Here's how:
 
-In any module accessible by the binary crate, such as the main.rs file, create a module marked with #[command_rpc_main]. Inside, you can write any code you want. Mark the functions you want to export as subcommands, as well as modules containing more functions that serve as subcommands themselves, with #[command_rpc]. While you can include other content, I recommend against it for the sake of clean code and security.
+In any module accessible by the binary crate, such as the main.rs file, create a module marked with `#[command_rpc_main]`. Inside, you can write any code you want. Mark the functions you want to export as subcommands, as well as modules containing more functions that serve as subcommands themselves, with `#[command_rpc]`. While you can include other content, I recommend against it for the sake of clean code and security.
 
-All that's left is parsing the CLI in the main function and executing the CLI call, perhaps after some preprocessing. For a more detailed tutorial, check out the info card, crates.io, or my GitHub page.
+All that's left is parsing the CLI in the main function and executing the CLI call, perhaps after some preprocessing. For a more detailed tutorial, check out the info card, `crates.io`, or my GitHub page.
 
 This is just the beginning; more features are on the way. For instance, you'll soon have the option to mark functions as deprecated for a specific version of your program without compromising backwards compatibility.
 
-Finally, I want to express my sincere gratitude to backdropbuild for motivating me to make the first release, and especially to Ami Pullack for suggesting the idea. For those unfamiliar with backdropbuild, it's a free program available to developers of all skill levels, even someone like me—a high school student in the 11th grade—working on it in my spare time.
+Finally, I want to express my sincere gratitude to backdropbuild for motivating me to make the first release, and especially to Amie Pullack for suggesting the idea. For those unfamiliar with backdropbuild, it's a free program available to developers of all skill levels, even someone like me — a high school student in the 11th grade — working on it in my spare time.
 
 Working on this project through backdropbuild was an incredibly rewarding experience. I hope to receive a grant, and I'm eager to receive feedback and feature suggestions from you, and perhaps even collaborate!
+
+Good bye, and stay rusty!

@@ -1,25 +1,18 @@
-workspace = { members = ["rustflix_rebuild"] }
 [package]
 name = "command-rpc"
 version = "0.1.10"
 edition = "2021"
-description = "This is a rpc service which is not ready yet but needs to be published because of testing purposes."
+description = "This is a cli crate and rpc service."
 license = "MIT OR Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-# my_workspace/Cargo.toml
-
 [lib]
 name = "command_rpc"
-# crate-type = ["dylib"]
 proc_macro = true
-path = "src/lib.rs"
+path = "./src/lib.rs"
 
 [dependencies]
-clap = { version = "*", features = ["derive"], optional = true } # TODO specify this to a several version
-syn = { version = "2.0.15", features = ["full", "parsing", "printing"] }
-quote = "1.0.26"
-regex = "1.5"
-
-mk_cli = { version = "^0.1.0", path = "./mk_cli/" }
+# clap = { version = "2.0.64", features = ["derive"], optional = true } # TODO specify this to a several version - does the user have to import on his own?
+syn = { version = "2.0.60", features = ["full", "parsing", "printing", "extra-traits"] }
+quote = "1.0.36"
