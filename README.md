@@ -37,7 +37,7 @@ transfer protocolls - and you may not use it for i/o-intense programs.
 ### Installation
 
 Run `cargo add command-rpc` shell command or insert `command-rpc = "*"` in your Cargo.toml.
-Just now, in `v0.1.10` this tools stands at the beginning of its development.
+Just now, in `v0.1.11` this tools stands at the beginning of its development.
 
 
 
@@ -48,7 +48,7 @@ Just now, in `v0.1.10` this tools stands at the beginning of its development.
  in it you annotate with `#[crpc_fn]` is going to be nested as command, and (public) modules with
  `#[crpc_mod]` included as subcommand, its inner (public) functions will be included too. Also comments
  will be extracted out of the function signature - other comments are extracted like working with clap.
- (Better check out our examples --> https://docs.rs/command-rpc/0.1.10/command_rpc/ )
+ (Better check out our examples --> https://docs.rs/command-rpc/0.1.11/command_rpc/ )
 3. Import the needed proc macros with `use command_rpc::*`.
 4. Give the `main.rs` file access to this module. Your `main` function looks as follows:
 
@@ -67,8 +67,8 @@ disappear after first build and expansion. Check out **Advices** below for more 
 
 + Use `cargo expand` to take a look on the generated code. You have to run `cargo install cargo-expand` first!
 Unfortunately you will see all expansions even coming from `clap`.
-+ For now, `v0.1.10`, it is not intended to have any output. You can use `(e)print(ln)!` to let your cli return something. Furthermore, only native types as input types are intended. Feel free to force the user know about rust syntax for giving objects as input, instead you could use a string as (json) file path.
-+ For the moment it is not possible to give commands with nested subcommands arguments because the function - having the same identifier in your written code - would expand to a struct with the same name which causes problems. An attribute is only allowed to manipulate the given code so this would be difficult to implement but could be possible in a newer version than `v0.1.10`.
++ For now, `v0.1.11`, it is not intended to have any output. You can use `(e)print(ln)!` to let your cli return something. Furthermore, only native types as input types are intended. Feel free to force the user know about rust syntax for giving objects as input, instead you could use a string as (json) file path.
++ For the moment it is not possible to give commands with nested subcommands arguments because the function - having the same identifier in your written code - would expand to a struct with the same name which causes problems. An attribute is only allowed to manipulate the given code so this would be difficult to implement but could be possible in a newer version than `v0.1.11`.
 + When developing more complex command line applications, know about `clap` for more benefits regarding integration between `clap` and `command_rpc`!
 
 
@@ -82,7 +82,7 @@ To do so, you may write for longer collaboration a message to me (Mail: loos-joh
 ## Version overview/preview
 
 
-+ `v0.1.10`: first working version
-+ `v0.1.11`, *new feature*: commands with nested subcommands are able to have own functionality and arguments
-+ `v0.1.12`, *new feature*: easy version management by just adding version ranges for each command
-+ `v0.1.13`, *feature extension*: diffrent functions with same name but disjoint version ranges coexist
++ `v0.1.11`: first working version
++ `v0.1.12`, *new feature*: commands with nested subcommands are able to have own functionality and arguments
++ `v0.1.13`, *new feature*: easy version management by just adding version ranges for each command
++ `v0.1.14`, *feature extension*: diffrent functions with same name but disjoint version ranges coexist
