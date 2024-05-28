@@ -4,22 +4,38 @@
 //! # Quick setup
 //! 
 //! ```
+//! use command_rpc::crpc_main;
+//! 
+//! #[crpc_main]
 //! pub mod my_cli_backend {
+//!    use command_rpc::{cprc_mod, crpc_fn};
+//! 
+//!    #[cprc_fn]
 //!    pub fn greet(
-//!     // The name of the person you want to greet.
+//!        /// The name of the person you want to greet.
 //!        name: str
 //!     ) {
 //!       eprintln!("Hello, {}!", name);
 //!   }
 //! 
-//!  pub mod my_cli_backend_sub {
-//!    pub fn friendly_greet(name: str // The name of the person you want to greet.
-//!                          adjective: str // the adjective you want to use in the greeting.
-//!                         ) -> Option<String> {
-//!      eprintln!("Hello, {}! You are {}!", name, adjective);
-//!     Some("You are friendly!".to_string())
-//!   }
+//!   #[crpc_mod]
+//!   pub mod my_cli_backend_sub {
+//!     use command_rpc::cprc_fn;
+//! 
+//!     #[crpc_fn]
+//!     pub fn friendly_greet(
+//!         /// The name of the person you want to greet.
+//!         name: str,
+//!         /// the adjective you want to use in the greeting.
+//!         adjective: str 
+//!      ) {
+//!        eprintln!("Hello, {}! You are {}!", name, adjective);
+//!      }
+//!    }
 //! }
+//!
+//! fn main() {
+//!    My_cli_mod::parse().delegate();
 //! }
 //! ```
 //!

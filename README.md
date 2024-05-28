@@ -32,6 +32,7 @@ transfer protocolls - and you may not use it for i/o-intense programs.
 + being easy-to write and beginner friendly
 
 
+
 ## Usage of `command_rpc`
 
 ### Installation
@@ -39,6 +40,43 @@ transfer protocolls - and you may not use it for i/o-intense programs.
 Run `cargo add command-rpc` shell command or insert `command-rpc = "*"` in your Cargo.toml.
 Just now, in `v0.1.12` this tools stands at the beginning of its development.
 
+
+### Example
+
+```
+use command_rpc::crpc_main;
+
+#[crpc_main]
+pub mod my_cli_backend {
+   use command_rpc::{cprc_mod, crpc_fn};
+
+   #[cprc_fn]
+   pub fn greet(
+       /// The name of the person you want to greet.
+       name: str
+    ) {
+      eprintln!("Hello, {}!", name);
+  }
+
+  #[crpc_mod]
+  pub mod my_cli_backend_sub {
+    use command_rpc::cprc_fn;
+
+    #[crpc_fn]
+    pub fn friendly_greet(
+        /// The name of the person you want to greet.
+        name: str,
+        /// the adjective you want to use in the greeting.
+        adjective: str 
+     ) {
+       eprintln!("Hello, {}! You are {}!", name, adjective);
+     }
+   }
+}
+fn main() {
+   My_cli_mod::parse().delegate();
+}
+```
 
 
 ### How to use `crpc`
