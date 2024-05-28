@@ -2,28 +2,13 @@
 
 A command-line rpc written in Rust.
 
-
-
-## Contents:
-
-- Installation, Status and Community
-- What `crpc` is made for
-- How to use `crpc`
-- Other design option?
-- What are you interested in? -New feature suggestion
-- Contribution
-- Version overview
-
 ---
 
-## Installation, Status and Community
+## Installation
 
 Run `cargo add command-rpc --features default` shell command or insert `command-rpc = { version = "*", features = ["default"]` in your Cargo.toml.
 Just now, in `v0.1.9` this tools stands at the beginning of its development. The a first
 working solution will hopefully be published in three weeks.
-
-A bit later, a discord server could be set up if wanted.
-Furthermore, a tutorial is planned.
 
 ---
 
@@ -37,7 +22,7 @@ Furthermore, a tutorial is planned.
 + calls from user or other programs
 
 Of course, that could be a disadvantage, you should not use `crpc` for big and well-defaultized
-transfer protocolls - and you may not use it for i/o stuff.
+transfer protocolls - and you may not use it for i/o-intense programs.
 
 ---
 
@@ -92,7 +77,7 @@ or make directly a pr. I´d be glad!
 
 ## Version overview
 
-```
+
 v0.1: Little tests with `proc_macro = true` and import issues.
 
 v0.2: Full documented preview structure, no full implementation.
@@ -104,4 +89,3 @@ v0.3: About the begin of June ´23 there will be a beta version.
 v1.0: After one month of troubleshooting there will be a first full version release (and also Github Release).
 
 v1.1: Special proc macros - they shall manage communication that is frontend-backend-like.
-```

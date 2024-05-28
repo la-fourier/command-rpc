@@ -14,5 +14,5 @@ path = "./src/lib.rs"
 
 [dependencies]
 # clap = { version = "2.0.64", features = ["derive"], optional = true } # TODO specify this to a several version - does the user have to import on his own?
-syn = { version = "2.0.60", features = ["full", "parsing", "printing", "extra-traits"] }
+syn = { version = "2.0.65", features = ["full", "parsing", "printing", "extra-traits"] }
 quote = "1.0.36"
