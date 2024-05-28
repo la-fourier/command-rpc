@@ -4,6 +4,7 @@ version = "0.1.11"
 edition = "2021"
 description = "This is a cli crate and api for replacing rpc."
 license = "MIT OR Apache-2.0"
+repository = "https://github.com/la-fourier/command_rpc"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

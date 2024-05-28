@@ -2,13 +2,16 @@
 //! Unfortunately, you have to import clap in your project yourself with *derive* feature enabled.
 //!
 //! # Quick setup
-//! ´´´
+//! 
+//! ```
 //! pub mod my_cli_backend {
-//!    pub fn greet(name: str // The name of the person you want to greet.
-//!                 ) {
+//!    pub fn greet(
+//!     // The name of the person you want to greet.
+//!        name: str
+//!     ) {
 //!       eprintln!("Hello, {}!", name);
 //!   }
-//!
+//! 
 //!  pub mod my_cli_backend_sub {
 //!    pub fn friendly_greet(name: str // The name of the person you want to greet.
 //!                          adjective: str // the adjective you want to use in the greeting.
@@ -17,7 +20,8 @@
 //!     Some("You are friendly!".to_string())
 //!   }
 //! }
-//! ´´´
+//! }
+//! ```
 //!
 //! # Prettier requests to endpoint
 //!
