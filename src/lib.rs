@@ -1,18 +1,18 @@
-use proc_macro::{Literal, Span, TokenStream, TokenTree};
-use quote::*;
+use proc_macro::TokenStream;
+use quote::{format_ident, quote, ToTokens};
 
-use std::collections::HashMap;
-// use syn::{self, parse_macro_input, AttrStyle, Attribute, Item, Item::*, ItemFn, ItemMod};
-use syn::{Item::*, __private::*, punctuated::Punctuated, token::Box, *};
-
-mod checks;
-// use checks::*;
+use syn::{
+    Item::{Fn, Mod, Struct},
+    __private::Span,
+    parse_macro_input,
+    token::Brace,
+};
 
 mod build;
-// use build::*;
-
+mod build_command;
+mod build_nested;
+mod checks;
 mod return_token;
-// use return_token::*;
 
 /// Hey! Nice you like to write with the `cprc` module. It refers to clap, thank you for your great work there!
 /// Unfortunately, you have to import clap in your project yourself with *derive* feature enabled.
@@ -62,6 +62,7 @@ mod return_token;
 ///
 /// ---
 ///
+/// marked as not working false
 ///
 /// # Integration to other languages
 ///
@@ -80,13 +81,6 @@ mod return_token;
 ///
 ///
 ///
-
-#[proc_macro_attribute]
-pub fn print_ast(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    let item = parse_macro_input!(item as syn::Item);
-    eprintln!("{:#?}", item);
-    item.to_token_stream().into()
-}
 
 macro_rules! callback {
     // For things like `callback!(my_cli_backend::...::greet("John"));`, when you want to call a function in your rust backend
@@ -109,6 +103,8 @@ macro_rules! callback {
     }};
 }
 
+/// This macro can be used to parse the input and call the right function without
+/// having to create a pipe. This shortens the code and makes it easier to understand.
 macro_rules! parse {
     // For the main function, that automatically parses the input and calls the right function - you have to pass the path to the crpc_main module
     ($inp:expr) => {
@@ -121,7 +117,7 @@ macro_rules! parse {
     };
 }
 
-// lazy variant! Just mark the main module with [crpc_main], then everything gets expaneded recursively!
+// lazy variant! Just mark the main module with [crpc_main], then everything gets expaneded recursively! -> less control..
 
 #[proc_macro_attribute]
 pub fn crpc(attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -167,31 +163,23 @@ pub fn crpc(attr: TokenStream, item: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn crpc_main(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as syn::Item);
-    if let Mod(item) = &item {
+    if let Mod(mut item) = item {
         if let syn::Visibility::Public(_) = item.vis {
-            let (name, sc_name) = build::subcommand::names(item.ident.to_string());
-            let subcommands = build::subcommand::subcommands(item.clone());
-            let sc_enum = build::subcommand::subcommand_enum(
-                &name.to_string(),
+            let (name, sc_name) = build_nested::names(item.ident.to_string());
+            let subcommands = build_nested::subcommands_with_help(item.clone());
+            let sc_enum = build_nested::subcommand_enum(
+                &name.to_string()[..name.to_string().len()].to_string(),
                 subcommands.clone(),
                 sc_name.clone(),
             );
-            let sc_match = build::subcommand::delegate_match_expr(
-                &name.to_string(),
-                subcommands.clone(),
-                &sc_name,
-            );
+            let sc_match = build_nested::delegate_match_expr(subcommands.clone(), &sc_name);
 
-            // let (_, _body) = item.content.clone().unwrap(); // TODO: as at mod
-            // let body = _body.iter().map(|item| -> syn::Stmt {
-            //     parse_quote!(#item)
-            // }).collect::<Vec<syn::Stmt>>();
+            let (_, mut _body) = item.content.clone().unwrap();
+            _body.insert(0, build::item_use());
+            item.content = Some((Brace(Span::call_site()), _body));
 
             // Generate the output token
-            let ret =
-                return_token::main_token(name, sc_name, sc_enum, sc_match, item.clone());
-            
-            return ret;
+            return_token::main_token(name, sc_name, sc_enum, sc_match, item.clone())
         } else {
             eprintln!(
                 "An item marked with #[crpc_main] must be public and accessible to the binary."
@@ -204,29 +192,29 @@ pub fn crpc_main(_attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 }
 
+/// This attribute can be used to mark modules that should be available in the cli.
+/// This works like a subcommand with nested commands; the module name is used as
+/// the subcommand name.
 #[proc_macro_attribute]
 pub fn crpc_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as syn::Item);
-    if let Mod(item) = &item {
+    if let Mod(mut item) = item {
         if let syn::Visibility::Public(_) = item.vis {
-            let (name, sc_name) = build::subcommand::names(item.ident.to_string());
-            let subcommands = build::subcommand::subcommands(item.clone());
-            let sc_enum = build::subcommand::subcommand_enum(
-                &name.to_string(),
+            let (name, sc_name) = build_nested::names(item.ident.to_string());
+            let subcommands = build_nested::subcommands_with_help(item.clone());
+            let sc_enum = build_nested::subcommand_enum(
+                &name.to_string()[..name.to_string().len()].to_string(),
                 subcommands.clone(),
                 sc_name.clone(),
             );
-            let sc_match = build::subcommand::delegate_match_expr(
-                &name.to_string(),
-                subcommands.clone(),
-                &sc_name,
-            );
+            let sc_match = build_nested::delegate_match_expr(subcommands.clone(), &sc_name);
+
+            let (_, mut _body) = item.content.clone().unwrap();
+            _body.insert(0, build::item_use());
+            item.content = Some((Brace(Span::call_site()), _body));
 
             // Generate the output token
-            let ret =
-                return_token::mod_token(name, sc_name, sc_enum, sc_match, item.clone());
-            
-            return ret;
+            return_token::mod_token(name, sc_name, sc_enum, sc_match, item.clone())
         } else {
             eprintln!(
                 "An item marked with #[crpc_main] must be public and accessible to the binary."
@@ -239,18 +227,13 @@ pub fn crpc_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 }
 
+/// This attribute can be used to mark functions that should be available in the cli.
+/// This works lika a subcommand without nested commands; function parameters are used
+/// as arguments for the cli. The expansion consists of a struct that holds the arguments
+/// and a function that calls the original function with the arguments.
 #[proc_macro_attribute]
 pub fn crpc_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    // Parse the input tokens into a Rust syntax tree
     let item = parse_macro_input!(item as syn::Item);
-
-    // Check for fn, public and output a type T ( where T: Into<String> )
-    // Parse name, args and their comments with "item.sig"
-    // Get command comments with "item.attrs" and "item.sig.ident"
-
-    // TODO idea for output Display deriving: https://stackoverflow.com/questions/30353462/how-to-derive-display-for-a-struct-containing-a-string
-    // WTF copilot?!
-    // making a new type equal to the type of the item - but since this is defined in this module, we are allowed to derive stuff from there - would make #[crpc_param] obsolete
 
     // Function check
     if let Fn(item) = &item {
@@ -259,7 +242,7 @@ pub fn crpc_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
             // Output type check
             checks::output_check(&item.sig.output); //.clone().into_token_stream().to_string());
 
-            // Input type checks              enable! only for testing
+            // Input type checks              TODO
             // if item
             //     .sig
             //     .inputs
@@ -271,16 +254,12 @@ pub fn crpc_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
             // Building...
             let name_struct = format_ident!("{}", build::bigger(&item.sig.ident.to_string()));
-            let new_function = build::command_args::modify_function(item.clone());
+            let new_function = build_command::to_impl_item(item.clone());
 
-            let item_call = build::command_args::item_call(item.sig.ident.clone());
+            let fields = build_command::fields(item.clone());
+            let struct_item = build_command::to_struct(name_struct.clone(), fields);
 
-            let fields = build::command_args::fields(item.clone());
-
-            let ret =
-                return_token::fn_token(name_struct, item_call, fields, new_function.clone());
-            
-            return ret;
+            return_token::fn_token(name_struct, struct_item, new_function)
         } else {
             eprintln!("An item marked with #[crpc_fn] must be public.");
             return item.to_token_stream().into();

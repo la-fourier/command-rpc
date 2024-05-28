@@ -1,16 +1,16 @@
 use proc_macro::TokenStream;
-use quote::*;
-use syn::*;
+use quote::quote;
+use syn::{ExprMatch, Ident, ImplItem, Item, ItemEnum, ItemMod};
 
 pub fn main_token(
     name: Ident,
     sc_name: Ident,
     sc_enum: ItemEnum,
     sc_match: ExprMatch,
-    body: ItemMod,
+    item: ItemMod,
 ) -> TokenStream {
     quote! {
-        use clap::{ Args, Parser, Subcommand };
+        use clap::{Parser, Subcommand};
 
         #[derive(Debug, Clone, Parser)]
         #[clap(author, version, about)] // Maybe later version more comfort..
@@ -33,7 +33,7 @@ pub fn main_token(
             }
         }
 
-        #body
+        #item
     }
     .into()
 }
@@ -43,13 +43,10 @@ pub fn mod_token(
     sc_name: Ident,
     sc_enum: ItemEnum,
     sc_match: ExprMatch,
-    body: ItemMod,
+    item: ItemMod,
 ) -> TokenStream {
     quote! {
-        use clap::{ Args, Parser, Subcommand };
-
         #[derive(Debug, Clone, Args)]
-        #[clap(author, version, about)] // Maybe later version more comfort..
         pub struct #name {
             #[clap(subcommand)]
             pub subcommand: #sc_name,
@@ -69,28 +66,16 @@ pub fn mod_token(
             }
         }
 
-        #body
+        #item
     }
     .into()
 }
 
-pub fn fn_token(
-    name: Ident,
-    item_call: ExprCall,
-    fields: Fields,
-    new_function: ItemFn,
-) -> TokenStream {
+pub fn fn_token(name: Ident, struct_item: Item, new_function: ImplItem) -> TokenStream {
     quote! {
-        #[derive(Debug, Clone, Args)]
-        pub struct #name {
-            #fields
-        }
+        #struct_item
 
         impl #name {
-            pub fn delegate(&self) {
-                eprintln!("{}", #item_call);
-            }
-
             #new_function
         }
     }
