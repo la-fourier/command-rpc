@@ -1,19 +1,3 @@
-use proc_macro::TokenStream;
-use quote::{format_ident, quote, ToTokens};
-
-use syn::{
-    Item::{Fn, Mod, Struct},
-    __private::Span,
-    parse_macro_input,
-    token::Brace,
-};
-
-mod build;
-mod build_command;
-mod build_nested;
-mod checks;
-mod return_token;
-
 /// Hey! Nice you like to write with the `cprc` module. It refers to clap, thank you for your great work there!
 /// Unfortunately, you have to import clap in your project yourself with *derive* feature enabled.
 ///
@@ -81,6 +65,24 @@ mod return_token;
 ///
 ///
 ///
+
+
+use proc_macro::TokenStream;
+use quote::{format_ident, quote, ToTokens};
+
+use syn::{
+    Item::{Fn, Mod, Struct},
+    __private::Span,
+    parse_macro_input,
+    token::Brace,
+};
+
+mod build;
+mod build_command;
+mod build_nested;
+mod checks;
+mod return_token;
+
 
 macro_rules! callback {
     // For things like `callback!(my_cli_backend::...::greet("John"));`, when you want to call a function in your rust backend
