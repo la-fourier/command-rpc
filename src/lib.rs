@@ -1,50 +1,50 @@
-/// Hey! Nice you like to write with the `cprc` module. It refers to clap, thank you for your great work there!
-/// Unfortunately, you have to import clap in your project yourself with *derive* feature enabled.
-///
-/// # Quick setup
-/// ```
-/// pub mod my_cli_backend {
-///    pub fn greet(name: str // The name of the person you want to greet.
-///                 ) {
-///       eprintln!("Hello, {}!", name);
-///   }
-///
-///  pub mod my_cli_backend_sub {
-///    pub fn friendly_greet(name: str // The name of the person you want to greet.
-///                          adjective: str // the adjective you want to use in the greeting.
-///                         ) -> Option<String> {
-///      eprintln!("Hello, {}! You are {}!", name, adjective);
-///     Some("You are friendly!".to_string())
-///   }
-/// }
-/// ```
-///
-/// # Prettier requests to endpoint
-///
-/// To make call to your endpoint in your Rust programs nicer, you can insert this snippet
-/// that defines a declarative macro (this is why it can´t be just exported from this crate).
-/// Calls in your program would look like this then(Same for other languages will be coming):
-/// ```
-/// callback!(my_cli_backend::greet("John"));
-/// ```
-///  TODO!
-/// ```
-/// macro_rules! callback {
-/// ($inp:expr) => {{
-///     let mut cmd = $inp.to_string();
-///     cmd = cmd.replace(";", "").replace(" ", "").replace("\n", "").replace("(", "").replace(")", "").replace("::", " ").replace(",", " ");
-///     std::thread::spawn(move || {
-///         let output = std::process::Command::new(cmd)
-///             .output()
-///             .expect("Failed to execute command");
-///         eprintln!("{}", std::string::String::from_utf8_lossy(&output.stdout));
-///     });
-/// }};
-/// }
-/// ```
-///
-///
-/// ---
+//! Hey! Nice you like to write with the `cprc` module. It refers to clap, thank you for your great work there!
+//! Unfortunately, you have to import clap in your project yourself with *derive* feature enabled.
+//!
+//! # Quick setup
+//! ´´´
+//! pub mod my_cli_backend {
+//!    pub fn greet(name: str // The name of the person you want to greet.
+//!                 ) {
+//!       eprintln!("Hello, {}!", name);
+//!   }
+//!
+//!  pub mod my_cli_backend_sub {
+//!    pub fn friendly_greet(name: str // The name of the person you want to greet.
+//!                          adjective: str // the adjective you want to use in the greeting.
+//!                         ) -> Option<String> {
+//!      eprintln!("Hello, {}! You are {}!", name, adjective);
+//!     Some("You are friendly!".to_string())
+//!   }
+//! }
+//! ´´´
+//!
+//! # Prettier requests to endpoint
+//!
+//! To make call to your endpoint in your Rust programs nicer, you can insert this snippet
+//! that defines a declarative macro (this is why it can´t be just exported from this crate).
+//! Calls in your program would look like this then(Same for other languages will be coming):
+//! ```
+//! callback!(my_cli_backend::greet("John"));
+//! ```
+//! 
+//! ```
+//! macro_rules! callback {
+//! ($inp:expr) => {{
+//!     let mut cmd = $inp.to_string();
+//!     cmd = cmd.replace(";", "").replace(" ", "").replace("\n", "").replace("(", "").replace(")", "").replace("::", " ").replace(",", " ");
+//!     std::thread::spawn(move || {
+//!         let output = std::process::Command::new(cmd)
+//!             .output()
+//!             .expect("Failed to execute command");
+//!         eprintln!("{}", std::string::String::from_utf8_lossy(&output.stdout));
+//!     });
+//! }};
+//! }
+//! ```
+//!
+//!
+//! ---
 ///
 /// marked as not working false
 ///
