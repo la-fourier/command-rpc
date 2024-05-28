@@ -1,91 +1,86 @@
-# command-rpc
+![image](logo.png)
 
-A command-line rpc written in Rust.
 
----
+![](https://img.shields.io/github/stars/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/github/forks/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/github/tag/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/github/release/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/github/issues/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/bower/v/command_rpc.md.svg)
 
-## Installation
 
-Run `cargo add command-rpc --features default` shell command or insert `command-rpc = { version = "*", features = ["default"]` in your Cargo.toml.
-Just now, in `v0.1.9` this tools stands at the beginning of its development. The a first
-working solution will hopefully be published in three weeks.
+A `command-line` rpc written in Rust. It build on top of the well-known king of rust cli crates, `clap`.
+Most of its features are preserved but the usage of `command_rpc` shortens the boilerplate code.
 
----
+**Official release: May 29th - There is going to be a tutorial on youtube, also linked here!**
 
-## What `crpc` is made for
+## Why to use `command_rpc`
+
+### What `crpc` is made for
 
 + lightweightness
 + efficience
-+ automatised type-checks
-+ being easy-to write and beginner friendly
 + export to any language
 + calls from user or other programs
 
 Of course, that could be a disadvantage, you should not use `crpc` for big and well-defaultized
 transfer protocolls - and you may not use it for i/o-intense programs.
 
----
 
-## How to use `crpc`
 
-A tutorial will be coming and linked here then.
+### Advantages to pure `clap`
+
++ more concise due to less boilerplate
++ inherited type hints in the help text of the cli
++ all clap features persist due to expansion
+
++ being easy-to write and beginner friendly
++ keep control over all 
+
+
+## Usage of `command_rpc`
+
+### Installation
+
+Run `cargo add command-rpc` shell command or insert `command-rpc = "*"` in your Cargo.toml.
+Just now, in `v0.1.10` this tools stands at the beginning of its development.
+
+
+
+### How to use `crpc`
 
 1. Add `command-rpc` as dependency.
-2. Write a `crpc` module that has the `#[crpc_mod]` attribute. The functions (that need to be public!)
+2. Write a `crpc` module that has the `#[crpc_main]` attribute. The functions (that need to be public!)
  in it you annotate with `#[crpc_fn]` is going to be nested as command, and (public) modules with
  `#[crpc_mod]` included as subcommand, its inner (public) functions will be included too. Also comments
- will be extracted out of the function signature - other comments are extraced like working with clap.
- (Better check out our examples --> https://docs.rs/command-rpc/0.1.9/command_rpc/ )
-3. Return arguments has to be `Option<String>`. An automatised type conversion could be implemented,
- but would probably be not so important.
-4. To give the subcommands generated with `#[crpc_mod]` functionality, implement a (public) function in
-  the module named after the module.
-5. Mark ALL Structs you need for parameters of the functions you want to give to the commands
-  with `#[crpc_param]`. This is nightly for now, use primitive types as possible.
-6. Import the needed proc macros with `use command_rpc::*`.
-7. Give the `main.rs` file acess to this module. Now you can expand, build or compile your program.
+ will be extracted out of the function signature - other comments are extracted like working with clap.
+ (Better check out our examples --> https://docs.rs/command-rpc/0.1.10/command_rpc/ )
+3. Import the needed proc macros with `use command_rpc::*`.
+4. Give the `main.rs` file access to this module. Your `main` function looks as follows:
 
-As a extra tip, give at first parameter `--help` so you can see the help text of your cli endpoint.
+    ```rust
+    fn main() {
+      [name of your crpc_main module, first letter kapital]_::parse().delegate();
+    }
+    ```
 
----
+5. Now you can expand, build or compile your program. Don´t worry about error reports at first, most of them
+disappear after first build and expansion. Check out **Advices** below for more information about usage recommendations and things that might not work correctly yet.
 
-## Other design option?
 
-### Instead of taking functions as last-level subcommands, the program could accept structs too - as benefit for better
-### comments on the cli arguments - and writing functionality in a method to this function, but that would complicate
-### writing. What do you think?
 
----
+### Advice
 
-## What are you interested in? -New feature suggestion
++ Use `cargo expand` to take a look on the generated code. You have to run `cargo install cargo-expand` first!
+Unfortunately you will see all expansions even coming from `clap`.
++ For now, `v0.1.10`, it is not intended to have any output. You can use `(e)print(ln)!` to let your cli return something. Furthermore, only native types as input types are intended. Feel free to force the user know about rust syntax for giving objects as input, instead you could use a string as (json) file path.
++ For the moment it is not possible to give commands with nested subcommands arguments because the function - having the same identifier in your written code - would expand to a struct with the same name which causes problems. An attribute is only allowed to manipulate the given code so this would be difficult to implement but could be possible in a newer version than `v0.1.10`.
++ When developing more complex command line applications, know about `clap` for more benefits regarding integration between `clap` and `command_rpc`!
 
-You like it and would even love it with some new feature?
-I´d be happy if you suggest it in the issues or contribute a pr directly.
 
-### Question: In the endpoind you´d use whitespaces between the arguments, are you interested in an option to change that?
-
-### Question: Are you interested in being able to export macros?
-
----
 
 ## Contribution
 
-To do so, you may write for longer collaboration a message to me (Mail: loos-johannes@gmx.de, Discord: Lá Foûrier),
-or make directly a pr. I´d be glad!
+To do so, you may write for longer collaboration a message to me (Mail: loos-johannes@gmx.de, Instagram: lsjohannes), or open directly a pr.
 
 ---
 
-## Version overview
+## Version overview/preview
 
 
-v0.1: Little tests with `proc_macro = true` and import issues.
-
-v0.2: Full documented preview structure, no full implementation.
-
-Future preview:
-
-v0.3: About the begin of June ´23 there will be a beta version.
-
-v1.0: After one month of troubleshooting there will be a first full version release (and also Github Release).
-
-v1.1: Special proc macros - they shall manage communication that is frontend-backend-like.
+--> `v0.1.10`: first working version
