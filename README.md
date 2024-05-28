@@ -1,8 +1,8 @@
 ![image](logo.png)
 
-
+<!-- 
 ![](https://img.shields.io/github/stars/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/github/forks/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/github/tag/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/github/release/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/github/issues/la-fourier/command_rpc.md.svg) ![](https://img.shields.io/bower/v/command_rpc.md.svg)
-
+ -->
 
 A `command-line` rpc written in Rust. It build on top of the well-known king of rust cli crates, `clap`.
 Most of its features are preserved but the usage of `command_rpc` shortens the boilerplate code.
@@ -25,12 +25,11 @@ transfer protocolls - and you may not use it for i/o-intense programs.
 
 ### Advantages to pure `clap`
 
-+ more concise due to less boilerplate
++ more concise and less redundant due to less boilerplate
 + inherited type hints in the help text of the cli
 + all clap features persist due to expansion
 
 + being easy-to write and beginner friendly
-+ keep control over all 
 
 
 ## Usage of `command_rpc`
@@ -83,4 +82,7 @@ To do so, you may write for longer collaboration a message to me (Mail: loos-joh
 ## Version overview/preview
 
 
---> `v0.1.10`: first working version
++ `v0.1.10`: first working version
++ `v0.1.11`, *new feature*: commands with nested subcommands are able to have own functionality and arguments
++ `v0.1.12`, *new feature*: easy version management by just adding version ranges for each command
++ `v0.1.13`, *feature extension*: diffrent functions with same name but disjoint version ranges coexist
